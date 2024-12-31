@@ -19,7 +19,7 @@
 #endif						
 
 #define NOMINMAX
-#include <windows.h>
+#include <Windows.h>
 
 #endif
 
@@ -1078,7 +1078,7 @@ class CDataFile : public CObject
 			int iEntry;
 			};
 
-		CDataFile (const CString &sFilename);
+		CDataFile (const CString &sFilename = NULL_STR);
 		virtual ~CDataFile (void);
 
 		ALERROR AddEntry (const CString &sData, int *retiEntry);

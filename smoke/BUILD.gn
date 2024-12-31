@@ -1,0 +1,36 @@
+
+source_set("unittests_empty") {
+  testonly = true
+  sources = [ "empty_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+  ]
+}
+
+source_set("unittests_kernel") {
+  testonly = true
+  sources = [ "kernel_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+    "//Alchemy/Kernel",
+  ]
+}
+
+source_set("unittests_codechain") {
+  testonly = true
+  sources = [ "codechain_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+    "//Alchemy/Kernel",
+    "//Alchemy/CodeChain",
+  ]
+}
+
+group("unittests") {
+  testonly = true
+  deps = [
+    ":unittests_kernel",
+    ":unittests_codechain",
+    ":unittests_empty",
+  ]
+}

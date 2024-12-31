@@ -29,7 +29,7 @@ typedef struct
 
 static CObjectClass<CDataFile>g_Class(OBJID_CDATAFILE, NULL);
 
-CDataFile::CDataFile (const CString &sFilename = NULL_STR) : CObject(&g_Class),
+CDataFile::CDataFile (const CString &sFilename) : CObject(&g_Class),
 		m_sFilename(sFilename),
 		m_hFile(INVALID_HANDLE_VALUE),
 		m_pFile(NULL),

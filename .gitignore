@@ -236,3 +236,6 @@ Temporary Items
 .apdisk
 /.vs/VSWorkspaceState.json
 /.vs/slnx.sqlite
+
+
+/out/

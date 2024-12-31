@@ -1,0 +1,180 @@
+# This file is evaluated once, within the context of the default toolchain,
+# which is the target toolchain.
+assert(current_os == target_os && current_cpu == target_cpu,
+       "Assumptions on current_xxx in this file have been violated")
+
+#  tool("alink") {
+#    command = "rm -f {{output}} && ar rcs {{output}} {{inputs}}"
+#    description = "AR {{target_output_name}}{{output_extension}}"
+#    outputs =
+#        [ "{{target_out_dir}}/{{target_output_name}}{{output_extension}}" ]
+#    default_output_extension = ".a"
+#    output_prefix = "lib"
+#  }
+
+#  tool("solink") {
+#    soname = "{{target_output_name}}{{output_extension}}"  # e.g. "libfoo.so".
+#    sofile = "{{output_dir}}/$soname"
+#    rspfile = soname + ".rsp"
+#    if (is_mac) {
+#      os_specific_option = "-install_name @executable_path/$sofile"
+#      rspfile_content = "{{inputs}} {{solibs}} {{libs}}"
+#    } else {
+#      os_specific_option = "-Wl,-soname=$soname"
+#      rspfile_content = "-Wl,--whole-archive {{inputs}} {{solibs}} -Wl,--no-whole-archive {{libs}}"
+#    }
+#    command = "g++ -shared {{ldflags}} -o $sofile $os_specific_option @$rspfile"
+#    description = "SOLINK $soname"
+#    # Use this for {{output_extension}} expansions unless a target manually
+#    # overrides it (in which case {{output_extension}} will be what the target
+#    # specifies).
+#    default_output_extension = ".so"
+#    # Use this for {{output_dir}} expansions unless a target manually overrides
+#    # it (in which case {{output_dir}} will be what the target specifies).
+#    default_output_dir = "{{root_out_dir}}"
+#    outputs = [ sofile ]
+#    link_output = sofile
+#    depend_output = sofile
+#    output_prefix = "lib"
+#  }
+#
+#  tool("link") {
+#    outfile = "{{target_output_name}}{{output_extension}}"
+#    rspfile = "$outfile.rsp"
+#    if (is_mac) {
+#      command = "g++ {{ldflags}} -o $outfile @$rspfile {{solibs}} {{libs}}"
+#    } else {
+#      command = "g++ {{ldflags}} -o $outfile -Wl,--start-group @$rspfile {{solibs}} -Wl,--end-group {{libs}}"
+#    }
+#    description = "LINK $outfile"
+#    default_output_dir = "{{root_out_dir}}"
+#    rspfile_content = "{{inputs}}"
+#    outputs = [ outfile ]
+#  }
+
+template("clang_toolchain") {
+  assert(defined(invoker.clang_target_triple),
+         "clang_target_triple must be defined")
+  assert(defined(invoker.cpu), "cpu must be defined")
+  assert(defined(invoker.os), "os must be defined")
+
+  # Optional:
+  # clang_target_root
+  # systroot_path
+
+  if (defined(invoker.clang_tools_root)) {
+    clang_tools_root = invoker.clang_tools_root
+    clang = "$clang_tools_root/clang"
+    clang_pp = "$clang_tools_root/clang++"
+  } else {
+    clang = "clang"
+    clang_pp = "clang++"
+  }
+
+  if (defined(invoker.sysroot_path)) {
+    sysroot_path = invoker.sysroot_path
+    sysroot_flag = "--sysroot $sysroot_path"
+  } else {
+    sysroot_flag = ""
+  }
+
+  target_flag = "--target=${invoker.clang_target_triple}"
+  toolchain(target_name) {
+    tool("cc") {
+      depfile = "{{output}}.d"
+      command = "$clang -MMD -MF $depfile $target_flag $sysroot_flag {{defines}} {{include_dirs}} {{cflags}} -c {{source}} -o {{output}}"
+      depsformat = "gcc"
+      description = "CC {{output}}"
+      outputs =
+          [ "{{source_out_dir}}/{{target_output_name}}.{{source_name_part}}.o" ]
+    }
+
+    tool("cxx") {
+      depfile = "{{output}}.d"
+      depsformat = "gcc"
+      command = "$clang_pp -MMD -MF $depfile $target_flag $sysroot_flag {{defines}} {{include_dirs}} {{cflags_cc}} {{cflags}} -c {{source}} -o {{output}}"
+      outputs = [ "{{source_out_dir}}/{{source_name_part}}.o" ]
+      description = "CXX {{source}}"
+    }
+
+    tool("objc") {
+      depfile = "{{output}}.d"
+      command = "$clang -MMD -MF $depfile $target_flag $sysroot_flag {{defines}} {{include_dirs}} {{cflags}} {{cflags_objc}} -c {{source}} -o {{output}}"
+      depsformat = "gcc"
+      description = "OBJCC {{output}}"
+      outputs =
+          [ "{{source_out_dir}}/{{target_output_name}}.{{source_name_part}}.o" ]
+    }
+
+    tool("objcxx") {
+      depfile = "{{output}}.d"
+      depsformat = "gcc"
+      command = "$clang_pp -MMD -MF $depfile $target_flag $sysroot_flag {{include_dirs}} {{cflags}} {{cflags_objcc}} -c {{source}} -o {{output}}"
+      outputs = [ "{{source_out_dir}}/{{source_name_part}}.o" ]
+      description = "OBJCXX {{source}}"
+    }
+
+    tool("link") {
+      outfile = "{{output_dir}}/{{target_output_name}}{{output_extension}}"
+      command = "$clang_pp -fuse-ld=lld $target_flag $sysroot_flag {{ldflags}} -o $outfile {{inputs}} {{solibs}} {{libs}} {{frameworks}}"
+      description = "LINK $outfile"
+      default_output_dir = "{{root_out_dir}}"
+      outputs = [ outfile ]
+    }
+
+    tool("stamp") {
+      command = "touch {{output}}"
+      description = "STAMP {{output}}"
+    }
+
+    tool("copy") {
+      command = "cp -af {{source}} {{output}}"
+      description = "COPY {{source}} {{output}}"
+    }
+
+    toolchain_args = {
+      current_cpu = invoker.cpu
+      current_os = invoker.os
+    }
+  }
+}
+
+if (host_os == "mac" && host_cpu == "arm64") {
+  host_triple = "arm64-apple-darwin-macho"
+}
+if (host_os == "linux" && host_cpu == "x64") {
+  host_triple = "x86_64-unknown-linux-gnu"
+}
+if (target_os == "mac" && target_cpu == "arm64") {
+  target_triple = "arm64-apple-darwin-macho"
+}
+if (target_os == "linux" && target_cpu == "x64") {
+  target_triple = "x86_64-unknown-linux-gnu"
+}
+if (target_os == "linux" && target_cpu == "arm64") {
+  target_triple = "aarch64-unknown-linux-gnu"
+}
+if (target_os == "win" && target_cpu == "x64") {
+  target_triple = "x86_64-pc-win32-msvc"
+}
+if (target_os == "win" && target_cpu == "x86") {
+  target_triple = "i386-pc-win32-msvc"
+}
+if (target_os == "win" && target_cpu == "arm64") {
+  target_triple = "aarch64-pc-win32-msvc"
+}
+
+
+clang_toolchain("host") {
+  os = host_os
+  cpu = host_cpu
+  clang_tools_root = rebase_path("//deps/clang/bin")
+  clang_target_triple = host_triple
+}
+
+clang_toolchain("target") {
+  os = target_os
+  cpu = target_cpu
+  clang_tools_root = rebase_path("//deps/clang/bin")
+  clang_target_triple = target_triple
+}

@@ -65,14 +65,24 @@ template <class VALUE> class TLinkedList
 			return ((SEntry *)Pos.m_pEntry)->Value;
 			}
 
-		void Insert (const VALUE &Value, CListIterator &Pos = CListIterator())
+void Insert (const VALUE &Value) {
+  CListIterator& Pos();
+  Insert(Value, Pos);
+}
+
+		void Insert (const VALUE &Value, CListIterator &Pos)
 			{
 			SEntry *pNewEntry = new SEntry;
 			pNewEntry->Value = Value;
 			Insert(pNewEntry, (SEntry *)Pos.m_pEntry);
 			}
 
-		VALUE *Insert (CListIterator &Pos = CListIterator())
+VALUE *Insert () {
+  CListIterator& Pos();
+  Insert(Pos);
+}
+
+		VALUE *Insert (CListIterator &Pos)
 			{
 			SEntry *pNewEntry = new SEntry;
 			Insert(pNewEntry, (SEntry *)Pos.m_pEntry);

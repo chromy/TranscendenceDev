@@ -1,0 +1,17 @@
+
+group("everything") {
+  deps = [
+    "Alchemy/Kernel",
+    "Alchemy/CodeChain",
+    #"Alchemy/CCShell",
+    #"Alchemy/CCLink",
+  ]
+}
+
+executable("unittests") {
+  testonly = true
+  deps = [
+    "deps/googletest:gtest_main",
+    "smoke:unittests",
+  ]
+}

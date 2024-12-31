@@ -1,0 +1,12 @@
+/benchmark/
+/clang/
+/clang-format/
+/clang_format/
+/gn/
+/googletest/
+/libbacktrace/
+/libcxx/
+/libcxxabi/
+/libunwind/
+/ninja/
+/windows-sdk/

@@ -1,0 +1,38 @@
+config("Include_config") {
+  include_dirs = [
+    ".",
+  ]
+}
+source_set("Kernel") {
+  public = [
+    "Kernel.h",
+  ]
+  sources = [
+    "KernelString.h",
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("CodeChain") {
+  public = [
+    "CodeChain.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("Alchemy") {
+  public = [
+    "Alchemy.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}

@@ -64,7 +64,7 @@ DWORD Kernel::mathMakeSeed (DWORD dwValue)
 	DWORD c = 12345;
 
 	dwValue = a * dwValue + c;
-	DWORD dwSeed = dwValue ^ (dwValue >> 11) ^ (dwValue << 5) & (dwValue >> 7) ^ (dwValue << 3) ^ (dwValue >> 13);
+	DWORD dwSeed = dwValue ^ (dwValue >> 11) ^ ((dwValue << 5) & (dwValue >> 7)) ^ (dwValue << 3) ^ (dwValue >> 13);
 
 	return dwSeed;
 	}
@@ -300,7 +300,7 @@ int Kernel::mathSeededRandom (int iSeed, int iFrom, int iTo)
 	int c = 12345;
 
 	iSeed = a * iSeed + c;
-	int iRandom = iSeed ^ (iSeed >> 11) ^ (iSeed << 5) & (iSeed >> 7) ^ (iSeed << 3) ^ (iSeed >> 13);
+	int iRandom = iSeed ^ (iSeed >> 11) ^ ((iSeed << 5) & (iSeed >> 7)) ^ (iSeed << 3) ^ (iSeed >> 13);
 	int iRange = Absolute(iTo - iFrom) + 1;
 
 	return iFrom + (Absolute(iRandom) % iRange);

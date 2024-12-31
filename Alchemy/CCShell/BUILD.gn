@@ -1,0 +1,17 @@
+source_set("CCShell") {
+  sources = [
+    "CCShell.cpp",
+    "CCShell.h",
+    "Primitives.cpp",
+    "stdafx.cpp",
+    "stdafx.h",
+  ]
+  deps = [
+    "../:Alchemy",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}
+
+

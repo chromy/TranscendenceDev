@@ -1,0 +1,86 @@
+# See:
+# https://chromium.googlesource.com/chromium/src/+/HEAD/build/docs/writing_gn_templates.md#using-forward_variables_from
+TESTONLY_AND_VISIBILITY = [ "testonly", "visibility" ]
+
+declare_args() {
+  is_debug = true
+}
+
+if (target_cpu == "") {
+  target_cpu = host_cpu
+}
+
+if (target_os == "") {
+  target_os = host_os
+}
+
+# The first time through this file current_{cpu,os} is unset and we
+# should set it to target_{cpu,os}. The second time round they are set
+# by toolchain_args and we should leave them alone.
+if (current_cpu == "") {
+  current_cpu = target_cpu
+}
+if (current_os == "") {
+  current_os = target_os
+}
+
+is_linux = current_os == "linux"
+is_mac = current_os == "mac"
+is_win = current_os == "win"
+
+default_compiler_configs = [
+  "//gn/config:compiler_config",
+  "//gn/config:optimization_config",
+]
+
+default_executable_configs = default_compiler_configs + [
+  "//gn/config:executable_config",
+]
+
+set_defaults("static_library") {
+  configs = default_compiler_configs
+}
+
+set_defaults("shared_library") {
+  configs = default_compiler_configs
+}
+
+set_defaults("source_set") {
+  configs = default_compiler_configs
+}
+
+set_defaults("executable") {
+  configs = default_executable_configs
+}
+
+_target_types = [
+  "executable",
+  "loadable_module",
+  "shared_library",
+]
+foreach(_target_type, _target_types) {
+  template(_target_type) {
+    # Alias "target_name" because it is clobbered by forward_variables_from().
+    _target_name = target_name
+    target(_target_type, _target_name) {
+      forward_variables_from(invoker, "*", TESTONLY_AND_VISIBILITY + [
+       "no_default_deps",
+      ])
+      forward_variables_from(invoker, TESTONLY_AND_VISIBILITY)
+      if (!defined(deps)) {
+        deps = []
+      }
+      if (!defined(invoker.no_default_deps) || !invoker.no_default_deps) {
+        # This pulls in one of:
+        # //gn/config:executable_deps
+        # //gn/config:loadable_module_deps
+        # //gn/config:shared_library_deps
+        deps += [ "//gn/config:${_target_type}_deps" ]
+      }
+    }
+  }
+}
+
+host_toolchain = "//gn/toolchains:host"
+target_toolchain = "//gn/toolchains:target"
+set_default_toolchain(target_toolchain)

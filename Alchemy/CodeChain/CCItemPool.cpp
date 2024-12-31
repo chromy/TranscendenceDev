@@ -9,18 +9,6 @@
 
 #pragma warning (disable : 4660)
 
-template class CCItemPool<CCInteger>;
-template class CCItemPool<CCDouble>;
-template class CCItemPool<CCString>;
-template class CCItemPool<CCLinkedList>;
-template class CCItemPool<CCPrimitive>;
-template class CCItemPool<CCNil>;
-template class CCItemPool<CCTrue>;
-template class CCItemPool<CCSymbolTable>;
-template class CCItemPool<CCLambda>;
-template class CCItemPool<CCAtomTable>;
-template class CCItemPool<CCVector>;
-
 template <class ItemClass>
 CCItemPool<ItemClass>::CCItemPool (void)
 
@@ -148,3 +136,17 @@ void CCItemPool<ItemClass>::DestroyItem (ICCItem *pItem)
 	m_pFreeList = pItem;
 	m_iCount--;
 	}
+
+template class CCItemPool<CCInteger>;
+template class CCItemPool<CCDouble>;
+template class CCItemPool<CCString>;
+template class CCItemPool<CCLinkedList>;
+template class CCItemPool<CCPrimitive>;
+template class CCItemPool<CCNil>;
+template class CCItemPool<CCTrue>;
+template class CCItemPool<CCSymbolTable>;
+template class CCItemPool<CCLambda>;
+template class CCItemPool<CCAtomTable>;
+template class CCItemPool<CCVector>;
+
+

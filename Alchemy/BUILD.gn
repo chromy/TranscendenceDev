@@ -1,0 +1,7 @@
+source_set("Alchemy") {
+  public_deps = [
+    "Include:Alchemy",
+    "Kernel",
+    "CodeChain",
+  ]
+}

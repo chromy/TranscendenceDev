@@ -589,7 +589,7 @@ int CString::GetMemoryUsage (void) const
 	if (m_pStore == NULL || m_pStore->iAllocSize <= 0)
 		return 0;
 
-	return (sizeof STORESTRUCT) + m_pStore->iAllocSize;
+	return (sizeof(STORESTRUCT)) + m_pStore->iAllocSize;
 	}
 
 char *CString::GetPointer (void) const

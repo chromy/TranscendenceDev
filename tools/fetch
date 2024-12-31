@@ -1,0 +1,493 @@
+#!/usr/bin/env python3
+# Copyright (C) 2017 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+import dataclasses as dc
+import hashlib
+import logging
+import os
+import shutil
+import subprocess
+import stat
+import sys
+import tempfile
+import time
+import zipfile
+import bz2
+
+from collections import namedtuple
+from platform import system, machine
+
+
+# The format for the deps below is the following:
+# (target_folder, source_url, sha1, target_os, target_arch)
+# |source_url| can be either a git repo or a http url.
+# If a git repo, |checksum| is the SHA1 committish that will be checked out.
+# If a http url, |checksum| is the SHA256 of the downloaded file.
+# If the url is a .zip, .tgz, or .tbz2 file it will be automatically deflated under
+# |target_folder|, taking care of stripping the root folder if it's a single
+# root (to avoid ending up with deps/protobuf/protobuf-1.2.3/... and have
+# instead just deps/protobuf).
+# |target_os| is either 'darwin', 'linux', 'windows' or 'all'
+# |target_arch| is either 'x64', 'arm64' or 'all'
+# in both cases the dep only applies on matching platforms
+# |target_arch| can be 'all' when 'target_os' is not 'all' for example in the
+# case of MacOS universal binaries.
+@dc.dataclass
+class Dependency:
+  target_folder: str
+  source_url: str
+  checksum: str
+  target_os: str
+  target_arch: str
+  submodules: bool = False
+
+
+# This is to remove old directories when build tools get {re,}moved. This is to
+# avoid accidentally referring to stale dir in custom user scripts.
+CLEANUP_OLD_DIRS = []
+
+
+# Dependencies required to build code on the host or when targeting desktop OS.
+BUILD_DEPS_TOOLCHAIN_HOST = [
+    # GN. From https://chrome-infra-packages.appspot.com/dl/gn/gn/.
+    # git_revision:0725d7827575b239594fbc8fd5192873a1d62f44 .
+    Dependency(
+        'deps/gn/gn',
+        'https://storage.googleapis.com/perfetto/gn-mac-1968-0725d782',
+        '9ced623a664560bba38bbadb9b91158ca4186358c847e17ab7d982b351373c2e',
+        'darwin', 'x64'),
+    Dependency(
+        'deps/gn/gn',
+        'https://storage.googleapis.com/perfetto/gn-mac-arm64-1968-0725d782',
+        'd22336b5210b4dad5e36e8c28ce81187f491822cf4d8fd0a257b30d6bee3fd3f',
+        'darwin', 'arm64'),
+    Dependency(
+        'deps/gn/gn',
+        'https://storage.googleapis.com/perfetto/gn-linux64-1968-0725d782',
+        'f706aaa0676e3e22f5fc9ca482295d7caee8535d1869f99efa2358177b64f5cd',
+        'linux', 'x64'),
+    Dependency(
+        'deps/gn/gn',
+        'https://storage.googleapis.com/perfetto/gn-linux-arm64-1968-0725d782',
+        'c2a372cd4f911028d8bc351fbf24835c9b1194fcc92beadf6c5a2b3addae973c',
+        'linux', 'arm64'),
+    Dependency(
+        'deps/gn/gn.exe',
+        'https://storage.googleapis.com/perfetto/gn-win-1968-0725d782',
+        '001f777f023c7a6959c778fb3a6b6cfc63f6baef953410ecdeaec350fb12285b',
+        'windows', 'x64'),
+
+    # clang-format
+    # From
+    # https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/mac/clang-format.arm64.sha1
+    Dependency(
+        'deps/clang-format/clang-format',
+        'https://storage.googleapis.com/chromium-clang-format/5553d7a3d912b7d49381ad68c9a56740601a57a0',
+        'e077990b2ea6807f6abc71b4cf1e487719d7e40574baddd2b51187fdcc8db803',
+        'darwin', 'arm64'),
+    # From
+    # https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/mac/clang-format.x64.sha1
+    Dependency(
+        'deps/clang-format/clang-format',
+        'https://storage.googleapis.com/chromium-clang-format/87d69aeff220c916b85b5d6d162fa5668aa9d64f',
+        '71179a8788a009cfd589636d50f0eb9f95f58b0cfda4351430bed7c0a48c080b',
+        'darwin', 'x64'),
+    # From https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/linux64/clang-format.sha1
+    Dependency(
+        'deps/clang-format/clang-format',
+        'https://storage.googleapis.com/chromium-clang-format/1facab3101fc6da6b9467543f27f0622b966bc19',
+        '5e459118d8ac825452e9e1f2717e4de5a36399dc6cc6aec7ec483ad27a0c927e',
+        'linux', 'x64'),
+    # From https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/win/clang-format.exe.sha1
+    Dependency(
+        'deps/clang-format/clang-format.exe',
+        'https://storage.googleapis.com/chromium-clang-format/2e569921b9884daf157021d6ae9e21991cd6cf81',
+        '2227376ada89ea832995b832222b722a27c4d5d8d59e9c4d7842877f99a1e30d',
+        'windows', 'x64'),
+
+    # Keep the SHA1 in sync with |clang_format_rev| in chromium //buildtools/DEPS.
+    Dependency(
+        'deps/clang_format/script',
+        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/clang/tools/clang-format.git',
+        'f97059df7f8b205064625cdb5f97b56668a125ef', 'all', 'all'),
+
+    # Ninja
+    Dependency(
+        'deps/ninja/ninja',
+        'https://storage.googleapis.com/perfetto/ninja-mac-x64_and_arm64-182',
+        '36e8b7aaa06911e1334feb664dd731a1cd69a15eb916a231a3d10ff65fca2c73',
+        'darwin', 'all'),
+    Dependency(
+        'deps/ninja/ninja',
+        'https://storage.googleapis.com/perfetto/ninja-linux64-182',
+        '54ac6a01362190aaabf4cf276f9c8982cdf11b225438940fdde3339be0f2ecdc',
+        'linux', 'x64'),
+    Dependency(
+        'deps/ninja/ninja.exe',
+        'https://storage.googleapis.com/perfetto/ninja-win-182',
+        '09ced0fcd1a4dec7d1b798a2cf9ce5d20e5d2fbc2337343827f192ce47d0f491',
+        'windows', 'x64'),
+    Dependency(
+        'deps/ninja/ninja',
+        'https://storage.googleapis.com/perfetto/ninja-linux-arm64-1111',
+        '05031a734ec4310a51b2cfe9f0096b26fce25ab4ff19e5b51abe6371de066cc5',
+        'linux', 'arm64'),
+
+    # Clang
+    Dependency(
+        "deps/clang.tgz",
+        "https://commondatastorage.googleapis.com/chromium-browser-clang/Mac_arm64/clang-llvmorg-19-init-7229-g315c88c5-1.tgz",
+        "20b7b0f83c59f82c43d217131a636864308f382e79b5a8a94f984c558a1db55e",
+        "darwin", "arm64"),
+    Dependency(
+        "deps/clang.tgz",
+        "https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/clang-llvmorg-19-init-7229-g315c88c5-1.tgz",
+        "de999de22c2a90ace9f16c8202fea7d5b57b6f039bd34691960f6edd30a3d413",
+        "linux", "x64"),
+
+    Dependency(
+        "deps/windows-sdk.zip",
+        "https://commondatastorage.googleapis.com/tsundoku-io-deps/windows-sdk-2022-10.0.18362.1-ee9be1ebcc.zip",
+        "8c74534541b3600d2cd1342c437ef722213623c3ac683516c996d833f2071b47",
+        "all", "all"),
+
+]
+
+
+BUILD_DEPS_HOST = [
+    # Keep in sync with Android's //external/googletest/METADATA.
+    Dependency(
+        'deps/googletest',
+        'https://android.googlesource.com/platform/external/googletest.git',
+        '609281088cfefc76f9d0ce82e1ff6c30cc3591e5', 'all', 'all'),
+
+    # libc++, libc++abi and libunwind for Linux where we need to rebuild the C++
+    # lib from sources. Keep the SHA1s in sync with Chrome's src/buildtools/DEPS.
+    Dependency(
+        'deps/libcxx',
+        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxx.git',
+        '852bc6746f45add53fec19f3a29280e69e358d44', 'all', 'all'),
+    Dependency(
+        'deps/libcxxabi',
+        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxxabi.git',
+        'a37a3aa431f132b02a58656f13984d51098330a2', 'all', 'all'),
+    Dependency(
+        'deps/libunwind',
+        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libunwind.git',
+        '419b03c0b8f20d6da9ddcb0d661a94a97cdd7dad', 'all', 'all'),
+
+    # Keep in sync with chromium DEPS.
+    Dependency(
+        'deps/libfuzzer',
+        'https://chromium.googlesource.com/chromium/llvm-project/compiler-rt/lib/fuzzer.git',
+        'debe7d2d1982e540fbd6bd78604bf001753f9e74', 'linux', 'all'),
+
+    # Benchmarking tool.
+    Dependency(
+        'deps/benchmark',
+        'https://chromium.googlesource.com/external/github.com/google/benchmark.git',
+        'e991355c02b93fe17713efe04cbc2e278e00fdbd', 'all', 'all'),
+
+    # Libbacktrace, for stacktraces in Linux/Android debug builds.
+    # From https://github.com/ianlancetaylor/libbacktrace/archive/177940370e4a6b2509e92a0aaa9749184e64af43.zip
+    Dependency(
+        'deps/libbacktrace.zip',
+        'https://storage.googleapis.com/perfetto/libbacktrace-14818b7783eeb9a56c3f0fca78cefd3143f8c5f6.zip',
+        '0d09295938155aa84d9a6049f63df8cd2def3a28302b3550ea3ead9100b3d086',
+        'all', 'all'),
+]
+
+ALL_DEPS = BUILD_DEPS_HOST + BUILD_DEPS_TOOLCHAIN_HOST
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def CheckCallRetry(*args, **kwargs):
+  """ Like subprocess.check_call, with retries up to 5 times. """
+  MAX_ATTEMPTS = 5
+  for attempt in range(1, MAX_ATTEMPTS + 1):
+    try:
+      return subprocess.check_call(*args, **kwargs)
+    except subprocess.CalledProcessError as error:
+      if attempt == MAX_ATTEMPTS:
+        raise error
+      else:
+        logging.error(error)
+        time.sleep(attempt * 3)
+
+
+def DownloadURL(url, out_file):
+  CheckCallRetry(['curl', '-L', '-#', '-o', out_file, url])
+
+
+def GetArch():
+  arch = machine()
+  if arch == 'arm64':
+    return 'arm64'
+  elif arch == 'aarch64':
+    return 'arm64'
+  else:
+    # Assume everything else is x64 matching previous behaviour.
+    return 'x64'
+
+
+def ReadFile(path):
+  if not os.path.exists(path):
+    return None
+  with open(path) as f:
+    return f.read().strip()
+
+
+def MkdirRecursive(path):
+  # Works with both relative and absolute paths
+  cwd = '/' if path.startswith('/') else ROOT_DIR
+  for part in path.split('/'):
+    cwd = os.path.join(cwd, part)
+    if not os.path.exists(cwd):
+      os.makedirs(cwd)
+    else:
+      assert (os.path.isdir(cwd))
+
+
+def HashLocalFile(path):
+  if not os.path.exists(path):
+    return None
+  with open(path, 'rb') as f:
+    return hashlib.sha256(f.read()).hexdigest()
+
+
+def ExtractZipfilePreservePermissions(zf, info, path):
+  target_path = os.path.join(path, info.filename)
+  mode = info.external_attr >> 16
+  S_IFLNK  = 0o120000  # symbolic link
+  if (mode & S_IFLNK) == S_IFLNK:
+    dst = zf.read(info).decode()
+    os.symlink(dst, target_path)
+    return
+  zf.extract(info.filename, path=path)
+  min_acls = 0o755 if info.filename.endswith('/') else 0o644
+  os.chmod(target_path, mode | min_acls)
+
+
+def IsGitRepoCheckoutOutAtRevision(path, revision):
+  return ReadFile(os.path.join(path, '.git', 'HEAD')) == revision
+
+
+def RmtreeIfExists(path):
+  # Git creates read-only files on windows, which cause failures with rmtree.
+  # This seems the socially accepted way to deal with it.
+  # See https://bugs.python.org/issue19643 .
+  def del_read_only_for_windows(_action, name, _exc):
+    os.chmod(name, stat.S_IWRITE)
+    os.remove(name)
+
+  if not os.path.exists(path):
+    return
+  deps_path = os.path.abspath(os.path.join(ROOT_DIR, 'deps'))
+  test_path = os.path.abspath(os.path.join(ROOT_DIR, 'test', 'data'))
+  if not os.path.abspath(path).startswith(deps_path):
+    # Safety check to prevent that some merge confilct ends up doing some
+    # rm -rf / or similar.
+    logging.fatal('Cannot remove %s: outside of deps', path)
+    sys.exit(1)
+  logging.info('Removing %s' % path)
+  if os.path.isdir(path):
+    shutil.rmtree(path, onerror=del_read_only_for_windows)
+  else:
+    os.remove(path)
+
+
+def CheckoutGitRepo(path, git_url, revision, check_only):
+  if IsGitRepoCheckoutOutAtRevision(path, revision):
+    return False
+  if check_only:
+    return True
+  path = path.replace('/', os.sep)
+  RmtreeIfExists(path)
+  MkdirRecursive(path)
+  logging.info('Fetching %s @ %s into %s', git_url, revision, path)
+  subprocess.check_call(['git', 'init', path], cwd=path)
+  CheckCallRetry(['git', 'fetch', '--quiet', '--depth', '1', git_url, revision],
+                 cwd=path)
+  subprocess.check_call(['git', 'checkout', revision, '--quiet'], cwd=path)
+  CheckCallRetry(
+      ['git', 'submodule', 'update', '--init', '--recursive', '--quiet'],
+      cwd=path)
+  assert IsGitRepoCheckoutOutAtRevision(path, revision)
+  return True
+
+
+def CheckHashes():
+  for dep in ALL_DEPS:
+    if dep.source_url.endswith('.git'):
+      continue
+    logging.info('Downloading %s for %s-%s', dep.source_url, dep.target_os,
+                 dep.target_arch)
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+      f.close()
+      DownloadURL(dep.source_url, f.name)
+      actual_checksum = HashLocalFile(f.name)
+      os.unlink(f.name)
+      if (actual_checksum != dep.checksum):
+        logging.fatal('SHA-256 mismatch for {} expected {} was {}'.format(
+            dep.source_url, dep.checksum, actual_checksum))
+
+
+def CheckDepotToolsIsRecent():
+  gn_py_path = shutil.which('gn.py')
+  if gn_py_path is None:
+    return True  # depot_tools doesn't seem to be installed in the PATH.
+  dt_dir = os.path.abspath(os.path.dirname(gn_py_path))
+  cmd = ['git', '-C', dt_dir, 'merge-base', '--is-ancestor', 'a0cf4321', 'HEAD']
+  git_ret = subprocess.call(cmd, stderr=subprocess.DEVNULL)
+  if git_ret == 0:
+    return True
+  print('\033[91mYour depot_tools revision is too old. Please run:\033[0m')
+  print('git -C %s fetch origin && git -C %s checkout -B main -t origin/main' %
+        (dt_dir, dt_dir))
+  return False
+
+
+def Main():
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--check-only')
+  parser.add_argument('--filter', action='append')
+  parser.add_argument('--verify', help='Check all URLs', action='store_true')
+  parser.add_argument(
+      '--no-toolchain', help='Do not download toolchain', action='store_true')
+  parser.add_argument(
+      '--build-os',
+      default=system().lower(),
+      choices=['windows', 'darwin', 'linux'],
+      help='Override the autodetected build operating system')
+  parser.add_argument(
+      '--build-arch',
+      default=GetArch(),
+      choices=['arm64', 'x64'],
+      help='Override the autodetected build CPU architecture')
+  args = parser.parse_args()
+  if args.verify:
+    CheckHashes()
+    return 0
+
+  if not CheckDepotToolsIsRecent():
+    return 1
+
+  deps = BUILD_DEPS_HOST
+  if not args.no_toolchain:
+    deps += BUILD_DEPS_TOOLCHAIN_HOST
+  deps_updated = False
+
+  for old_dir in CLEANUP_OLD_DIRS:
+    RmtreeIfExists(os.path.join(ROOT_DIR, old_dir))
+
+  target_arch = args.build_arch
+  target_os = args.build_os
+  for dep in deps:
+    matches_os = dep.target_os == 'all' or target_os == dep.target_os
+    matches_arch = dep.target_arch == 'all' or target_arch == dep.target_arch
+    if not matches_os or not matches_arch:
+      continue
+    if args.filter and not any(f in dep.target_folder for f in args.filter):
+      continue
+    local_path = os.path.join(ROOT_DIR, dep.target_folder)
+    if dep.source_url.endswith('.git'):
+      deps_updated |= CheckoutGitRepo(local_path, dep.source_url, dep.checksum,
+                                      args.check_only)
+      continue
+    is_compressed = any([local_path.endswith(ext) for ext in ['.zip', '.tgz', '.tbz2']])
+    compressed_target_dir = os.path.splitext(local_path)[0] if is_compressed else None
+    compressed_dir_stamp = os.path.join(compressed_target_dir, '.stamp') if is_compressed else None
+
+    if ((not is_compressed and HashLocalFile(local_path) == dep.checksum) or
+        (is_compressed and ReadFile(compressed_dir_stamp) == dep.checksum)):
+      continue
+    deps_updated = True
+    if args.check_only:
+      continue
+    MkdirRecursive(os.path.dirname(dep.target_folder))
+    if HashLocalFile(local_path) != dep.checksum:
+      download_path = local_path + '.tmp'
+      logging.info('Downloading %s from %s', local_path, dep.source_url)
+      DownloadURL(dep.source_url, download_path)
+      os.chmod(download_path, 0o755)
+      actual_checksum = HashLocalFile(download_path)
+      if actual_checksum != dep.checksum:
+        os.remove(download_path)
+        logging.fatal('SHA-256 mismatch for {} expected {} was {}'.format(
+            download_path, dep.checksum, actual_checksum))
+        return 1
+      shutil.move(download_path, local_path)
+
+    assert HashLocalFile(local_path) == dep.checksum
+
+    if is_compressed:
+      logging.info('Extracting %s into %s' % (local_path, compressed_target_dir))
+      assert (os.path.commonprefix((ROOT_DIR, compressed_target_dir)) == ROOT_DIR)
+      RmtreeIfExists(compressed_target_dir)
+
+      # Decompress the archive.
+      if local_path.endswith('.tgz'):
+        MkdirRecursive(compressed_target_dir)
+        subprocess.check_call(['tar', '-oxf', local_path], cwd=compressed_target_dir)
+      elif local_path.endswith('.zip'):
+        with zipfile.ZipFile(local_path, 'r') as zf:
+          for info in zf.infolist():
+            ExtractZipfilePreservePermissions(zf, info, compressed_target_dir)
+      elif local_path.endswith('.tbz2'):
+        tar_path = '{}.tar.tmp'.format(local_path)
+        with open(tar_path, 'w') as f:
+          with bz2.open(local_path, 'r') as bf:
+            f.write(bf.read())
+        MkdirRecursive(compressed_target_dir)
+        subprocess.check_call(['tar', '-oxf', tar_path], cwd=compressed_target_dir)
+
+      # If the zip contains one root folder, rebase one level up moving all
+      # its sub files and folders inside |target_dir|.
+      subdir = os.listdir(compressed_target_dir)
+      if len(subdir) == 1:
+        subdir = os.path.join(compressed_target_dir, subdir[0])
+        if os.path.isdir(subdir):
+          for subf in os.listdir(subdir):
+            shutil.move(os.path.join(subdir, subf), compressed_target_dir)
+          os.rmdir(subdir)
+
+      # Create stamp and remove the archive.
+      with open(compressed_dir_stamp, 'w') as stamp_file:
+        stamp_file.write(dep.checksum)
+      os.remove(local_path)
+
+  if args.check_only:
+    if not deps_updated:
+      with open(args.check_only, 'w') as f:
+        f.write('OK')  # The content is irrelevant, just keep GN happy.
+      return 0
+    argz = ' '.join(
+        [x for x in sys.argv[1:] if not x.startswith('--check-only')])
+    print('\033[91mBuild deps are stale. ' +
+          'Please run tools/install-build-deps %s\033[0m' % argz)
+    return 1
+
+  if deps_updated:
+    # Stale binary files may be compiled against old sysroot headers that aren't
+    # tracked by gn.
+    logging.warning('Remember to run "gn clean <output_directory>" ' +
+                    'to avoid stale binary files.')
+
+
+if __name__ == '__main__':
+  logging.basicConfig(level=logging.INFO)
+  sys.exit(Main())

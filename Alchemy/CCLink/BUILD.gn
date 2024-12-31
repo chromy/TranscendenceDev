@@ -1,0 +1,8 @@
+source_set("CCLink") {
+  sources = [
+    "CCLink.cpp",
+  ]
+  deps = [
+    "../:Alchemy",
+  ]
+}

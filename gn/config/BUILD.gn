@@ -1,0 +1,158 @@
+config("compiler") {
+  if (is_linux) {
+    configs = [ "linux:compiler" ]
+  }
+}
+
+config("suppressions") {
+  cflags = [
+    # The pattern of `if (error = foo()))` is common in the code base.
+    "-Wno-parentheses",
+    # The pattern of `::fooLog("Something %s", aCString);`
+    # is the common in the code base.
+    "-Wno-non-pod-varargs",
+  ]
+}
+
+config("compiler_config") {
+  configs = [
+    ":suppressions",
+    ":compiler",
+    ":runtime_library",
+  ]
+  cflags = [
+    #"-Wall",
+    #"-Wextra",
+    #"-Wpedantic",
+
+    # TODO(chromy): enable -Werror
+    #"-Werror",
+    "-fcolor-diagnostics",
+  ]
+
+  if (is_win) {
+    cflags += [
+      "-fms-extensions",
+      "-fms-compatibility-version=19",
+    ]
+  }
+
+  cflags_cc = [ "-std=c++20" ]
+  cflags_objcc = [ "-std=c++20" ]
+}
+
+config("debug_config") {
+  ldflags = [ "-g" ]
+  cflags = [
+    "-g",
+    "-O0",
+  ]
+}
+
+config("release_config") {
+  defines = [ "NDEBUG" ]
+  cflags = [ "-O3" ]
+}
+
+config("executable_config") {
+  ldflags = []
+}
+
+config("runtime_library") {
+  cflags = []
+  cflags_cc = [ "-nostdinc++" ]
+  ldflags = [
+    "-nostdlib",
+    "-nostdlib++",
+  ]
+
+  if (is_win) {
+
+    ldflags += [
+      "-L" + rebase_path("//deps/windows-sdk/Windows Kits/10/Lib/10.0.18362.0/um/$current_cpu", root_build_dir),
+      "-L" + rebase_path("//deps/windows-sdk/Windows Kits/10/Lib/10.0.18362.0/ucrt/$current_cpu", root_build_dir),
+      "-L" + rebase_path("//deps/windows-sdk/VC/Tools/MSVC/14.42.34433/lib/$current_cpu", root_build_dir),
+      "-lucrt",
+      "-lvcruntime",
+      "-lmsvcrt",
+      "-lmsvcprt",
+      "-lkernel32",
+      "-luser32",
+      "-lAdvapi32",
+
+      "-lWS2_32",
+      "-lGdi32",
+      "-lversion",
+      "-lvfw32",
+      "-lwinmm",
+      "-ldsound",
+      "-lodbc32",
+      "-lodbccp32",
+      "-lshell32",
+
+      "-fms-runtime-lib=dll",
+
+      #"-llibucrt",
+      #"-llibvcruntime",
+      #"-llibcmt",
+      #"-llibcpmt",
+      "-v",
+    ]
+
+    cflags += [
+      "-fms-extensions",
+      "-fms-compatibility",
+      "-fms-runtime-lib=dll",
+      "-v",
+    ]
+
+    cflags_cc += [
+      "-isystem" + rebase_path("//deps/windows-sdk/VC/Tools/MSVC/14.42.34433/include", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/ucrt", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/shared", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/winrt", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/um", root_build_dir),
+    ]
+
+  }
+
+  #if (is_linux) {
+  #  configs = [ "linux:runtime_library" ]
+  #}
+}
+
+# Default optimisation level. Exactly one of:
+# - debug_config
+# - release_config
+config("optimization_config") {
+  if (is_debug) {
+    configs = [ "//gn/config:debug_config" ]
+  } else {
+    configs = [ "//gn/config:release_config" ]
+  }
+}
+
+# This group is a dependency of every executable and shared library.
+group("common_deps") {
+  visibility = [
+    ":executable_deps",
+    ":loadable_module_deps",
+    ":shared_library_deps",
+  ]
+}
+
+# Only the executable template in BUILDCONFIG.gn should reference this.
+group("executable_deps") {
+  public_deps = [ ":common_deps" ]
+}
+
+# Only the loadable_module template in BUILDCONFIG.gn should reference this.
+group("loadable_module_deps") {
+  public_deps = [ ":common_deps" ]
+}
+
+# Only the shared_library template in BUILDCONFIG.gn should reference this.
+group("shared_library_deps") {
+  public_deps = [ ":common_deps" ]
+}
+

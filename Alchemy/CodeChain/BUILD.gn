@@ -1,0 +1,43 @@
+source_set("CodeChain") {
+  sources = [
+    "CCAtomTable.cpp",
+    "CCDouble.cpp",
+    "CCInteger.cpp",
+    "CCItemPool.cpp",
+    "CCLambda.cpp",
+    "CCLinkedList.cpp",
+    "CCNil.cpp",
+    "CCNumeral.cpp",
+    "CCPrimitive.cpp",
+    "CCString.cpp",
+    "CCSymbolTable.cpp",
+    "CCTrue.cpp",
+    "CCVector.cpp",
+    "CConsPool.cpp",
+    "CPageManager.cpp",
+    "CTextFilePage.cpp",
+    "CodeChain.cpp",
+    "DefPrimitives.h",
+    "Functions.cpp",
+    "Functions.h",
+    "ICCItem.cpp",
+    "ICCItemPtr.cpp",
+    "Link.cpp",
+    "LoadApp.cpp",
+    "Pages.h",
+    "PreComp.cpp",
+    "PreComp.h",
+    "SelfTest.cpp",
+    "TMathList.h",
+    "pageLibrary.cpp",
+  ]
+  public_deps = [
+    "../Kernel",
+    "../Include:CodeChain",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}
+
+
