@@ -17,5 +17,5 @@ template <class BLENDER> class TFillRegionSolid : public TRegionPainter32<TFillR
 
 		CG32bitPixel m_rgbColor;
 
-	friend TRegionPainter32;
+	friend TRegionPainter32<TFillRegionSolid<BLENDER>, BLENDER>;
 	};

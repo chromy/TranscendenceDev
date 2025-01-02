@@ -1,0 +1,16 @@
+source_set("DirectXFont") {
+  sources = [
+    "stdafx.h",
+    "stdafx.cpp",
+    "DirectXFont.cpp",
+  ]
+  public_deps = [
+    "../Include:DirectXFont",
+  ]
+  deps = [
+    "../XMLUtil",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}

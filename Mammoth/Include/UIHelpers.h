@@ -93,6 +93,7 @@ class CListCollectionTask : public IHITask
 	public:
 		struct SOptions
 			{
+      SOptions() {}
 			DWORD dwSelectUNID = 0;
 
 			RECT rcRect = { 0 };
@@ -134,6 +135,7 @@ class CListSaveFilesTask : public IHITask
 
 		struct SOptions
 			{
+        SOptions(){}
 			CString sUsername;					//	Sign-in player
 			int cxWidth = DEFAULT_WIDTH;		//	Width of area
 			bool bFilterPermadeath = false;		//	Don't show non-permadeath games

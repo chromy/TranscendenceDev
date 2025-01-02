@@ -112,6 +112,7 @@ class CCartoucheBlock
 
 		struct SPaintOptions
 			{
+        SPaintOptions(){}
 			bool bDisabled = false;
 			};
 
@@ -170,6 +171,7 @@ class CIconLabelBlock
 
 		struct SPaintOptions
 			{
+        SPaintOptions(){};
 			bool bDisabled = false;
 			};
 

@@ -22,7 +22,7 @@ void AlchemyMain (CXMLElement *pCmdLine);
 ALERROR CreateFont (CXMLElement *pCmdLine, CG16bitFont *pFont);
 void ProcessInputFile (const CString &sInputFile);
 
-int main (int argc, char *argv[ ], char *envp[ ])
+int main (int argc, const char *argv[ ], char *envp[ ])
 	{
 	if (!kernelInit())
 		{

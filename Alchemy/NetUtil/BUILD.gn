@@ -1,0 +1,15 @@
+source_set("NetUtil") {
+  sources = [
+    "CDataPackStruct.cpp",
+    "CNetClient.cpp",
+    "NetUtil.cpp",
+    "CNetServer.cpp",
+  ]
+  public_deps = [
+    "../Include:NetUtil",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}
+

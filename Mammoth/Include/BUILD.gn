@@ -1,0 +1,122 @@
+config("Include_config") {
+  include_dirs = [
+    ".",
+  ]
+}
+
+source_set("TSE") {
+  public = [
+    "TSE.h",
+  ]
+  sources = [
+    "TSEComms.h",
+    "TSEDockScreenType.h",
+    "Painters.h",
+    "TSEOverlayType.h",
+    "TSEDocking.h",
+    "TSEEconomyType.h",
+    "TSEEventsImpl.h",
+    "TSEStationImpl.h",
+    "TSEWeaponClassImpl.h",
+    "TSEItemEnhancements.h",
+    "TSEAdventureDesc.h",
+    "TSUIMapPainters.h",
+    "TSETrade.h",
+    "TSETopologyDefs.h",
+    "TSEUniverse.h",
+    "TSEMultiverse.h",
+    "TSESpaceEnvironment.h",
+    "TSESovereign.h",
+    "TSEPropertyHandler.h",
+    "SteamUtil.h",
+    "TSEPaintUtil.h",
+    "TSESpaceObjectsEnum.h",
+    "TSUIHUD.h",
+    "CloudInterface.h",
+    "TSEPlayerSettings.h",
+    "TSEWeaponFireDesc.h",
+    "TSETypes.h",
+    "TSEUniverseInlines.h",
+    "TSEUtil.h",
+    "TSEDesign.h",
+    "TSEShipClass.h",
+    "TSEEvents.h",
+    "TSEMissions.h",
+    "TSESpaceObjectUtil.h",
+    "TSESounds.h",
+    "TSEGeometry.h",
+    "TSESystemCreate.h",
+    "TSUI.h",
+    "TSEDevices.h",
+    "TSEShipCreator.h",
+    "TSEPower.h",
+    "TSEShipEquipment.h",
+    "TSEEngineDefs.h",
+    "TSUISessions.h",
+    "TSUISettings.h",
+    "TSEPlayer.h",
+    "UIHelpers.h",
+    "TSEObjectJoints.h",
+    "TSETopology.h",
+    "TSEItemInlines.h",
+    "TSEMapPainters.h",
+    "TSEItemType.h",
+    "TSEObjectCriteria.h",
+    "TSEPhysics.h",
+    "TSEArmor.h",
+    "TSESystemMap.h",
+    "TSEListImpl.h",
+    "TSEPaint.h",
+    "TSEConfigurationDescInlines.h",
+    "TSEMissionType.h",
+    "TSEItemDefs.h",
+    "TSEDesignDefs.h",
+    "TSETransLisp.h",
+    "TSEArtifactAwakening.h",
+    "TSEGameRecords.h",
+    "TSEAccessibilitySettings.h",
+    "Soundtrack.h",
+    "TSEImages.h",
+    "TSETransLispUtil.h",
+    "TSEItems.h",
+    "TSESpaceObjectsImpl.h",
+    "TSEVersions.h",
+    "TSESystemDefs.h",
+    "TSEEffects.h",
+    "TSEStationType.h",
+    "TSEAchievements.h",
+    "TSEDeviceClassesImpl.h",
+    "TSEStorage.h",
+    "TSEShipSystems.h",
+    "TSESystem.h",
+    "TSEShipAI.h",
+    "TSESystemType.h",
+    "TSEResourceDb.h",
+    "TSEDockScreenSession.h",
+    "TSECurrency.h",
+    "TSEOverlays.h",
+    "TSEParticleSystem.h",
+    "TSESystemRandomEncounters.h",
+    "TSETargeting.h",
+    "TSESpaceObjectDefs.h",
+    "TSELanguage.h",
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+
+source_set("TSUI") {
+  public = [
+    "TSUI.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+
+

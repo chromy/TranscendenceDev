@@ -256,7 +256,7 @@ template <class BLENDER> class TBltImageNormal : public TImagePainter<TBltImageN
 	private:
 		CG32bitPixel Filter (CG32bitPixel rgbSrc, CG32bitPixel *pDest) const { return rgbSrc; }
 
-	friend TImagePainter;
+	friend TImagePainter<TBltImageNormal<BLENDER>, BLENDER>;
 	};
 
 template <class BLENDER> class TBltImageTrans : public TImagePainter<TBltImageTrans<BLENDER>, BLENDER>
@@ -283,7 +283,7 @@ template <class BLENDER> class TBltImageTrans : public TImagePainter<TBltImageTr
 
 		BYTE m_byOpacity;
 
-	friend TImagePainter;
+	friend TImagePainter<TBltImageTrans<BLENDER>, BLENDER>;
 	};
 
 template <class BLENDER> class TFillImageSolid : public TImagePainter<TFillImageSolid<BLENDER>, BLENDER>
@@ -298,7 +298,7 @@ template <class BLENDER> class TFillImageSolid : public TImagePainter<TFillImage
 
 		CG32bitPixel m_rgbColor;
 
-	friend TImagePainter;
+	friend TImagePainter<TFillImageSolid<BLENDER>, BLENDER>;
 	};
 
 //	Fill Painters --------------------------------------------------------------

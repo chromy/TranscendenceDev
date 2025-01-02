@@ -547,6 +547,8 @@ template <typename EVENT_ENUM, size_t N> class TEventHandlerCache
 		SEventHandlerDesc m_Cache[N];
 	};
 
+#include "TSEUniverse.h"
+
 template <class CLASS> class CDesignTypeRef
 	{
 	public:
@@ -567,7 +569,7 @@ template <class CLASS> class CDesignTypeRef
 			}
 
 		DWORD GetUNID (void) const { return m_dwUNID; }
-		ALERROR LoadUNID (SDesignLoadCtx &Ctx, const CString &sUNID, DWORD dwDefault = 0) { if (!sUNID.IsBlank()) return ::LoadUNID(Ctx, sUNID, &m_dwUNID); else { m_dwUNID = dwDefault; return NOERROR; } }
+		ALERROR LoadUNID (SDesignLoadCtx &Ctx, const CString &sUNID, DWORD dwDefault = 0) { if (!sUNID.IsBlank()) return LoadUNID(Ctx, sUNID, &m_dwUNID); else { m_dwUNID = dwDefault; return NOERROR; } }
 
 		void Set (CLASS *pType)
 			{

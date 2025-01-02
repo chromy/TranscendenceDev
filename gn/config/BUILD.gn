@@ -11,6 +11,9 @@ config("suppressions") {
     # The pattern of `::fooLog("Something %s", aCString);`
     # is the common in the code base.
     "-Wno-non-pod-varargs",
+
+    "-Wno-inconsistent-missing-override",
+    "-Wno-switch",
   ]
 }
 
@@ -92,18 +95,23 @@ config("runtime_library") {
 
       "-fms-runtime-lib=dll",
 
+      # Unclear if this is correct or not.
+      "--for-linker=-safeseh:no",
+
       #"-llibucrt",
       #"-llibvcruntime",
       #"-llibcmt",
       #"-llibcpmt",
-      "-v",
+
+      #"-v",
     ]
 
     cflags += [
       "-fms-extensions",
       "-fms-compatibility",
       "-fms-runtime-lib=dll",
-      "-v",
+
+      #"-v",
     ]
 
     cflags_cc += [

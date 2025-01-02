@@ -131,7 +131,7 @@ template <class BLENDER> class CRayRasterizer : public TLinePainter32<CRayRaster
 		WidthAdjArray m_WidthAdjTop;	    //	Top width adjustment
 		WidthAdjArray m_WidthAdjBottom;	    //	Bottom width adjustment
 
-        friend TLinePainter32;
+        friend TLinePainter32<CRayRasterizer<BLENDER>, BLENDER>;
     };
 
 template <class BLENDER> class CFlareRayRasterizer : public TLinePainter32<CFlareRayRasterizer<BLENDER>, BLENDER>
@@ -168,7 +168,7 @@ template <class BLENDER> class CFlareRayRasterizer : public TLinePainter32<CFlar
 			return CG32bitPixel(byOpacity, byOpacity, byOpacity, byOpacity);
             }
 
-        friend TLinePainter32;
+        friend TLinePainter32<CFlareRayRasterizer<BLENDER>, BLENDER>;
     };
 
 class CLightningBundlePainter : public ILinePainter

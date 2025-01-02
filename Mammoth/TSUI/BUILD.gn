@@ -1,0 +1,65 @@
+source_set("TSUI") {
+  sources = [
+    "CMapLegendPainter.cpp",
+    "CMessageSession.cpp",
+    "CReadProfileTask.cpp",
+    "CSmallOptionButtonAnimator.cpp",
+    "CGalacticMapSystemDetails.cpp",
+    "CShieldHUDDefault.cpp",
+    "CSoundtrackManager.cpp",
+    "stdafx.h",
+    "CItemPainter.cpp",
+    "CWeaponHUDCircular.cpp",
+    "HUDImpl.h",
+    "ClassInfoHelpers.cpp",
+    "CReactorHUDDefault.cpp",
+    "IHUDPainter.cpp",
+    "CArmorHUDRectangular.cpp",
+    "CArmorHUDShaped.cpp",
+    "CTimerRegistry.cpp",
+    "CAccelerateHUD.cpp",
+    "Dialogs.cpp",
+    "CArmorHUDRingSegments.cpp",
+    "CHumanInterface.cpp",
+    "CHexarcServiceStub.cpp",
+    "CMCIMixer.cpp",
+    "CTilePainter.cpp",
+    "CExtensionListMap.cpp",
+    "Run.cpp",
+    "CAutomataEffectPainter.cpp",
+    "CBackgroundProcessor.cpp",
+    "CListCollectionTask.cpp",
+    "IHIController.cpp",
+    "CHoverDescriptionPainter.cpp",
+    "CLRSHUD.cpp",
+    "CListSaveFilesTask.cpp",
+    "CTimersHUD.cpp",
+    "CTextAreaAnimator.cpp",
+    "CVisualPalette.cpp",
+    "TSUICodeChain.cpp",
+    "CWeaponHUDDefault.cpp",
+    "CItemDataAnimatron.cpp",
+    "CStargateEffectPainter.cpp",
+    "CArmorHUDImages.cpp",
+    "CUserSettings.cpp",
+    "CHexarcService.cpp",
+    "CReactorHUDCircular.cpp",
+    "CXelerus.cpp",
+    "CMapScaleCounter.cpp",
+    "HardCrash.cpp",
+    "CUIHelper.cpp",
+    "IHISession.cpp",
+    "CCloudService.cpp",
+  ]
+  deps = [
+    "//Alchemy",
+  ]
+  public_deps = [
+    "../Include:TSUI",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}
+
+

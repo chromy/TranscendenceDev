@@ -80,6 +80,7 @@ class CTradingDesc
 
 		struct SHasServiceOptions
 			{
+      SHasServiceOptions() {}
 			CItemCriteria ItemCriteria;					//	Service that matches this criteria
 
 			bool bFullInstallOnly = false;				//	If TRUE, service must not require purchase to install

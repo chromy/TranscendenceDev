@@ -1,0 +1,16 @@
+source_set("Graphics") {
+  sources = [
+    "CGBitmap.cpp",
+    "CGFont.cpp",
+    "CGResourceFile.cpp",
+    "DIB.cpp",
+    "GDI.cpp",
+    "Misc.cpp",
+    "PreComp.h",
+    "Raw.cpp",
+    "Regions.cpp",
+  ]
+  public_deps = [
+    "../Include:Graphics",
+  ]
+}

@@ -2,7 +2,21 @@
 group("everything") {
   deps = [
     "Alchemy/Kernel",
+    "Alchemy/XMLUtil",
     "Alchemy/CodeChain",
+    "Alchemy/Graphics",
+    "Alchemy/DirectXUtil",
+    "Alchemy/IntelJPEGUtil",
+    "Mammoth/TSE",
+    #"Mammoth/TSUI",
+    #"Transcendence/TransCompiler",
+
+    # Unclear if DirectXFont builds.
+    # "Alchemy/DirectXFont",
+
+    # NetUtil does not build (missing CSharedObjectQueue, CStructArray)
+    #"Alchemy/NetUtil",
+
     #"Alchemy/CCShell",
     #"Alchemy/CCLink",
   ]

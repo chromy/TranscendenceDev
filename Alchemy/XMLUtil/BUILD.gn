@@ -1,0 +1,24 @@
+source_set("XMLUtil") {
+  sources = [
+    "PreComp.h",
+    "Misc.cpp",
+    "CExternalEntityTable.cpp",
+    "JSONParser.cpp",
+    "CJSONValue.cpp",
+    "CXMLElement.cpp",
+    "CEntityResolverList.cpp",
+    "CJSONMessage.cpp",
+    "Parser.cpp",
+  ]
+  public_deps = [
+    "../Include:XMLUtil",
+    "../Kernel",
+  ]
+  deps = [
+  ]
+  include_dirs = [
+    ".",
+  ]
+}
+
+

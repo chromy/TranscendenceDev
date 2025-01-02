@@ -1,0 +1,14 @@
+source_set("TransCompiler") {
+  sources = [
+    "PreComp.h",
+    "TDBCompiler.h",
+    "CTDBCompiler.cpp",
+    "main.cpp",
+  ]
+  deps = [
+    "//Alchemy",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}

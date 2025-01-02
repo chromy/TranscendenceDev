@@ -686,7 +686,7 @@ ALERROR ReadDIBInfo (IReadBlock *pBlock, HANDLE *rethDIB, int *retiBitsOffset, B
 			bi.biClrUsed = dwNumColors;
 			bi.biClrImportant = dwNumColors;
 
-			pPos += (int)(sizeof BITMAPCOREHEADER) - (int)(sizeof BITMAPINFOHEADER);
+			pPos += (int)(sizeof(BITMAPCOREHEADER)) - (int)(sizeof(BITMAPINFOHEADER));
 			break;
 			}
 

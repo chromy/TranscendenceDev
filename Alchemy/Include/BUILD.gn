@@ -3,6 +3,7 @@ config("Include_config") {
     ".",
   ]
 }
+
 source_set("Kernel") {
   public = [
     "Kernel.h",
@@ -26,9 +27,76 @@ source_set("CodeChain") {
   ]
 }
 
+source_set("Graphics") {
+  public = [
+    "Graphics.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
 source_set("Alchemy") {
   public = [
     "Alchemy.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("DirectXUtil") {
+  public = [
+    "DirectXUtil.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("DirectXFont") {
+  public = [
+    "DirectXFont.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("XMLUtil") {
+  public = [
+    "XMLUtil.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("NetUtil") {
+  public = [
+    "NetUtil.h",
+  ]
+  sources = [
+  ]
+  public_configs = [
+    ":Include_config",
+  ]
+}
+
+source_set("IntelJPEGUtil") {
+  public = [
+    "JPEGUtil.h",
+    "IntelJPEGUtil.h",
   ]
   sources = [
   ]

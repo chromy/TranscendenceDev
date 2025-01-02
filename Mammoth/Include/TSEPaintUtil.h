@@ -132,6 +132,7 @@ class CRTFText
 	public:
 		struct SAutoRTFOptions
 			{
+      SAutoRTFOptions() {}
 			CG32bitPixel rgbQuoteText = CG32bitPixel(255, 255, 255);
 
 			bool bNoQuoteHighlight = false;

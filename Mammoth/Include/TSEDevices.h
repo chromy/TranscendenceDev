@@ -7,6 +7,8 @@
 
 #include <memory>
 
+#include "TSEDeviceClassesImpl.h"
+
 class CCargoDesc;
 class CTargetList;
 class CWeaponTargetDefinition;

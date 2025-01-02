@@ -1,0 +1,23 @@
+source_set("IntelJPEGUtil") {
+  sources = [
+    "ijl.h",
+    "Load.cpp",
+    "Save.cpp",
+    "PreComp.h",
+  ]
+  public_deps = [
+    "../Include:IntelJPEGUtil",
+  ]
+  deps = [
+    "../Graphics",
+  ]
+  include_dirs = [
+    ".",
+  ]
+  cflags = [
+  ]
+  libs = [
+    "./ijl15l.lib",
+  ]
+}
+

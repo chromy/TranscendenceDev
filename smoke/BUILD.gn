@@ -26,11 +26,31 @@ source_set("unittests_codechain") {
   ]
 }
 
+source_set("unittests_xmlutil") {
+  testonly = true
+  sources = [ "xmlutil_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+    "//Alchemy/XMLUtil",
+  ]
+}
+
+source_set("unittests_jpegutil") {
+  testonly = true
+  sources = [ "jpegutil_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+    "//Alchemy/IntelJPEGUtil",
+  ]
+}
+
 group("unittests") {
   testonly = true
   deps = [
     ":unittests_kernel",
     ":unittests_codechain",
+    ":unittests_xmlutil",
+    ":unittests_jpegutil",
     ":unittests_empty",
   ]
 }

@@ -314,6 +314,7 @@ class CEffect : public TSpaceObjectImpl<OBJID_CEFFECT>
 	public:
 		struct SCreateOptions
 			{
+        SCreateOptions() {}
 			CSpaceObject *pAnchor = NULL;
 			int iRotation = 0;
 			bool bLoop = false;
