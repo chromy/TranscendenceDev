@@ -1,0 +1,45 @@
+name: continuous integration
+
+on: [push, pull_request]
+
+jobs:
+  official:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+  llvm:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target_os: [win]
+        target_cpu: [x86]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Restore deps cached
+        id: cache-deps-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            deps
+        key: ${{ runner.os }}-${{ target_os }}-${{ target_cpu }}-deps
+      - name: Install deps
+        run: ./tools/fetch
+      - name: gn
+        run: ./tools/gn gen --args='target_os="${{ target_os }}" target_cpu="${{ target_cpu }}"' out/r
+      - name: ninja
+        run: ./tools/ninja -C out/r
+      - name: Store deps cached
+        id: cache-deps-store
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            deps
+          key: ${{ steps.cache-deps-restore.outputs.cache-primary-key }}
+
+
+
+
