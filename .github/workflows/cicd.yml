@@ -27,13 +27,13 @@ jobs:
         id: cache-deps-restore
         uses: actions/cache/restore@v4
         with:
-          key: ${{ runner.os }}-${{ target_os }}-${{ target_cpu }}-deps
+          key: ${{ runner.os }}-${{ matrix.target_os }}-${{ matrix.target_cpu }}-deps
           path: |
             deps
       - name: Install deps
         run: ./tools/fetch
       - name: Configure build
-        run: ./tools/gn gen --args='target_os="${{ target_os }}" target_cpu="${{ target_cpu }}"' out/r
+        run: ./tools/gn gen --args='target_os="${{ matrix.target_os }}" target_cpu="${{ matrix.target_cpu }}"' out/r
       - name: Build
         run: ./tools/ninja -C out/r
       - name: Store deps cached
