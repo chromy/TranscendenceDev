@@ -3,14 +3,18 @@ name: continuous integration
 on: [push, pull_request]
 
 jobs:
-  official:
+  msvc:
     runs-on: windows-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Build
+        run: msbuild /m /p:Configuration=Release /p:Platform=Win32 ./Transcendence/Transcendence.sln
 
-  llvm:
+  clang:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,22 +27,22 @@ jobs:
         id: cache-deps-restore
         uses: actions/cache/restore@v4
         with:
+          key: ${{ runner.os }}-${{ target_os }}-${{ target_cpu }}-deps
           path: |
             deps
-        key: ${{ runner.os }}-${{ target_os }}-${{ target_cpu }}-deps
       - name: Install deps
         run: ./tools/fetch
-      - name: gn
+      - name: Configure build
         run: ./tools/gn gen --args='target_os="${{ target_os }}" target_cpu="${{ target_cpu }}"' out/r
-      - name: ninja
+      - name: Build
         run: ./tools/ninja -C out/r
       - name: Store deps cached
         id: cache-deps-store
         uses: actions/cache/save@v4
         with:
+          key: ${{ steps.cache-deps-restore.outputs.cache-primary-key }}
           path: |
             deps
-          key: ${{ steps.cache-deps-restore.outputs.cache-primary-key }}
 
 
 
