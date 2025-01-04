@@ -81,10 +81,8 @@ config("runtime_library") {
       "-lmsvcprt",
       "-lkernel32",
       "-luser32",
-      "-lAdvapi32",
 
       "-lWS2_32",
-      "-lGdi32",
       "-lversion",
       "-lvfw32",
       "-lwinmm",
@@ -92,6 +90,12 @@ config("runtime_library") {
       "-lodbc32",
       "-lodbccp32",
       "-lshell32",
+
+      # Uppercase .Lib suffix causes problems:
+      #"-lGdi32",
+      #"-lAdvapi32",
+      rebase_path("//deps/windows/sdk/lib/um/$current_cpu/Gdi32.Lib", root_build_dir),
+      rebase_path("//deps/windows/sdk/lib/um/$current_cpu/AdvAPI32.Lib", root_build_dir),
 
       "-fms-runtime-lib=dll",
 
