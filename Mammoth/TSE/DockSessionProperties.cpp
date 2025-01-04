@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CDockSession> CDockSession::m_PropertyTable = std::array<TPropertyHandler<CDockSession>::SPropertyDef, 2> {{
+TPropertyHandler<CDockSession> CDockSession::m_PropertyTable = std::array<TPropertyHandler<CDockSession>::SPropertyDef, 2u> {{
 	{	"screen",
 		"Returns current screen (or Nil if not in a screen).",
 		[](const CDockSession &DockSession, const CString &sProperty) 

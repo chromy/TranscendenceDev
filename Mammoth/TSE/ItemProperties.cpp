@@ -33,7 +33,7 @@
 #define PROPERTY_USED							CONSTLIT("used")
 #define PROPERTY_WEAPON_TYPES					CONSTLIT("weaponTypes")
 
-TPropertyHandler<CItem> CItem::m_PropertyTable = std::array<TPropertyHandler<CItem>::SPropertyDef, 1> {{
+TPropertyHandler<CItem> CItem::m_PropertyTable = std::array<TPropertyHandler<CItem>::SPropertyDef, 1u> {{
 		{
 		"charges",						"Charges left in item.",
 		[](const CItem &Item, const CString &sProperty) 

@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CObjectImage> CObjectImage::m_PropertyTable = std::array<TPropertyHandler<CObjectImage>::SPropertyDef, 1> {{
+TPropertyHandler<CObjectImage> CObjectImage::m_PropertyTable = std::array<TPropertyHandler<CObjectImage>::SPropertyDef, 1u> {{
 		{
 		"memoryUsageKB",		"Current memory usage, in KB",
 		[](const CObjectImage &Type, const CString &sProperty) 

@@ -31,7 +31,7 @@ class TPropertyHandler
 			{
 			}
 
-		template <int N> TPropertyHandler (const std::array<SPropertyDef, N> &Table)
+		template <unsigned int N> TPropertyHandler (const std::array<SPropertyDef, N> &Table)
 			{
 			m_Table.GrowToFit(N);
 

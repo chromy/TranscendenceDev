@@ -14,6 +14,10 @@ config("suppressions") {
 
     "-Wno-inconsistent-missing-override",
     "-Wno-switch",
+    "-Wno-pragma-pack",
+    "-Wno-microsoft-cast",
+    "-Wno-delayed-template-parsing-in-cxx20",
+    "-Wno-return-type",
   ]
 }
 
@@ -37,6 +41,7 @@ config("compiler_config") {
     cflags += [
       "-fms-extensions",
       "-fms-compatibility-version=19",
+      "-fdelayed-template-parsing",
     ]
   }
 
@@ -115,15 +120,16 @@ config("runtime_library") {
       "-fms-compatibility",
       "-fms-runtime-lib=dll",
 
-      #"-v",
-    ]
-
-    cflags_cc += [
       "-isystem" + rebase_path("//deps/windows/crt/include", root_build_dir),
       "-isystem" + rebase_path("//deps/windows/sdk/include/ucrt", root_build_dir),
       "-isystem" + rebase_path("//deps/windows/sdk/include/shared", root_build_dir),
       "-isystem" + rebase_path("//deps/windows/sdk/include/winrt", root_build_dir),
       "-isystem" + rebase_path("//deps/windows/sdk/include/um", root_build_dir),
+
+      #"-v",
+    ]
+
+    cflags_cc += [
     ]
 
   }

@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CPower> CPower::m_PropertyTable = std::array<TPropertyHandler<CPower>::SPropertyDef, 2> {{
+TPropertyHandler<CPower> CPower::m_PropertyTable = std::array<TPropertyHandler<CPower>::SPropertyDef, 2u> {{
 		{
 		"imageDesc",		"imageDesc for the power",
 		[](const CPower &Type, const CString &sProperty) 

@@ -6,7 +6,7 @@
 #include "PreComp.h"
 #include "Transcendence.h"
 
-TPropertyHandler<CPlayerShipController> CPlayerShipController::m_PropertyTable = std::array<TPropertyHandler<CPlayerShipController>::SPropertyDef, 1> {{
+TPropertyHandler<CPlayerShipController> CPlayerShipController::m_PropertyTable = std::array<TPropertyHandler<CPlayerShipController>::SPropertyDef, 1u> {{
 		{
 		"target",			"Target object",
 		[](const CPlayerShipController &Player, const CString &sProperty) 

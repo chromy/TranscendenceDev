@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CEffect> CEffect::m_PropertyTable = std::array<TPropertyHandler<CEffect>::SPropertyDef, 1> {{
+TPropertyHandler<CEffect> CEffect::m_PropertyTable = std::array<TPropertyHandler<CEffect>::SPropertyDef, 1u> {{
 		{
 		"lifetime",		"ticks",
 		[](const CEffect &Obj, const CString &sProperty) { return ICCItemPtr(Obj.GetLifetime()); },

@@ -78,7 +78,6 @@ source_set("DirectXUtil") {
     "lodepng/lodepng.h",
     "lodepng/lodepng_util.cpp",
     "lodepng/lodepng.cpp",
-    "lodepng/pngdetail.cpp",
     "lodepng/lodepng_util.h",
     "CGPath.cpp",
     "DrawQuadCurve.cpp",

@@ -39,6 +39,9 @@ class IPlayerController;
 struct SDestroyCtx;
 struct SSystemCreateCtx;
 struct STradeServiceCtx;
+struct SDesignLoadCtx;
+
+ALERROR LoadUNID (SDesignLoadCtx &Ctx, const CString &sString, DWORD *retdwUNID, DWORD dwDefaultUNID = 0);
 
 struct SDesignLoadCtx
 	{
@@ -1532,7 +1535,6 @@ ALERROR LoadDamageAdj (CXMLElement *pItem, const CString &sAttrib, int *retiAdj,
 DamageTypes LoadDamageTypeFromXML (const CString &sAttrib);
 DWORD LoadExtensionVersion (const CString &sVersion);
 CG32bitPixel LoadRGBColor (const CString &sString, CG32bitPixel rgbDefault = CG32bitPixel::Null());
-ALERROR LoadUNID (SDesignLoadCtx &Ctx, const CString &sString, DWORD *retdwUNID, DWORD dwDefaultUNID = 0);
 bool SetFrequencyByLevel (CString &sLevelFrequency, int iLevel, int iFreq);
 
 //	Inline implementations

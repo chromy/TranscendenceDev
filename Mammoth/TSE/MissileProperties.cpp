@@ -10,7 +10,7 @@
 #define PROPERTY_SOURCE							CONSTLIT("source")
 #define PROPERTY_TARGET							CONSTLIT("target")
 
-TPropertyHandler<CMissile> CMissile::m_PropertyTable = std::array<TPropertyHandler<CMissile>::SPropertyDef, 6> {{
+TPropertyHandler<CMissile> CMissile::m_PropertyTable = std::array<TPropertyHandler<CMissile>::SPropertyDef, 6u> {{
 		{
 		"lifeLeft",			"ticks",
 		[](const CMissile &Obj, const CString &sProperty) 

@@ -75,7 +75,7 @@
 #define STR_NEXT								CONSTLIT("next")
 #define STR_PREV								CONSTLIT("prev")
 
-TPropertyHandler<CShip> CShip::m_PropertyTable = std::array<TPropertyHandler<CShip>::SPropertyDef, 5> {{
+TPropertyHandler<CShip> CShip::m_PropertyTable = std::array<TPropertyHandler<CShip>::SPropertyDef, 5u> {{
 		{
 		"inPlayerSquadron",		"True/Nil if we're part of the player's squadron",
 		[](const CShip &ShipObj, const CString &sProperty) 

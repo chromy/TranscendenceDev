@@ -27,7 +27,7 @@
 
 #define REASON_DEBRIEFED						CONSTLIT("debriefed")
 
-TPropertyHandler<CMission> CMission::m_PropertyTable = std::array<TPropertyHandler<CMission>::SPropertyDef, 20> {{
+TPropertyHandler<CMission> CMission::m_PropertyTable = std::array<TPropertyHandler<CMission>::SPropertyDef, 20u> {{
 		{
 		"acceptedOn",		"ticks",
 		[](const CMission &Obj, const CString &sProperty) 

@@ -13,8 +13,8 @@ class CWeaponTargetDefinition
 	//  Note that we use the range, fire arc, and all other property of the attached weapon, since all this does
 	//  is tell our attached weapon what to shoot at.
 	public:
-		class CWeaponTargetDefinition () { };
-		class CWeaponTargetDefinition (Kernel::CString sCriteria, bool bCheckLineOfFire = false) : m_bCheckLineOfFire(bCheckLineOfFire), m_CriteriaString(sCriteria) { m_TargetCriteria.Init(sCriteria); };
+		CWeaponTargetDefinition () { };
+		CWeaponTargetDefinition (Kernel::CString sCriteria, bool bCheckLineOfFire = false) : m_bCheckLineOfFire(bCheckLineOfFire), m_CriteriaString(sCriteria) { m_TargetCriteria.Init(sCriteria); };
 		bool MatchesTarget (CSpaceObject* pSource, CSpaceObject* pTarget) const;
 		CSpaceObject* FindTarget (CWeaponClass* pWeapon, CInstalledDevice* pDevice, CSpaceObject* pSource, CItemCtx& ItemCtx) const;
 		bool AimAndFire (CWeaponClass* pWeapon, CInstalledDevice* pDevice, CSpaceObject* pSource, CDeviceClass::SDeviceUpdateCtx& Ctx) const;

@@ -42,7 +42,6 @@ source_set("TSUI") {
     "CStargateEffectPainter.cpp",
     "CArmorHUDImages.cpp",
     "CUserSettings.cpp",
-    "CHexarcService.cpp",
     "CReactorHUDCircular.cpp",
     "CXelerus.cpp",
     "CMapScaleCounter.cpp",
@@ -56,6 +55,9 @@ source_set("TSUI") {
   ]
   public_deps = [
     "../Include:TSUI",
+    "//Alchemy/DirectXUtil",
+    "//Alchemy/Graphics",
+    "//Mammoth/TSE",
   ]
   include_dirs = [
     ".",

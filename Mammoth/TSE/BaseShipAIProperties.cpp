@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CBaseShipAI> CBaseShipAI::m_PropertyTable = std::array<TPropertyHandler<CBaseShipAI>::SPropertyDef, 4> {{
+TPropertyHandler<CBaseShipAI> CBaseShipAI::m_PropertyTable = std::array<TPropertyHandler<CBaseShipAI>::SPropertyDef, 4u> {{
 		{
 		"ai.combatStyle",			"Combat style",
 		[](const CBaseShipAI &BaseShipAI, const CString &sProperty) 

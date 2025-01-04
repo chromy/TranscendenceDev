@@ -70,12 +70,14 @@ source_set("Kernel") {
     "XForm.cpp",
     "quickhull/QuickHull.cpp",
     "quickhull/QuickHull.hpp",
-    # TODO(chromy): enable zip
-    #"Zip.cpp",
-    #"ZipArchive.cpp",
+    "Zip.cpp",
+    "ZipArchive.cpp",
   ]
   public_deps = [
     "../Include:Kernel",
+  ]
+  deps = [
+    "../zlib-1.2.7:zlib",
   ]
   include_dirs = [
     ".",

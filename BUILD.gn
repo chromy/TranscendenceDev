@@ -8,8 +8,8 @@ group("everything") {
     "Alchemy/DirectXUtil",
     "Alchemy/IntelJPEGUtil",
     "Mammoth/TSE",
-    #"Mammoth/TSUI",
-    #"Transcendence/TransCompiler",
+    "Mammoth/TSUI",
+    "Transcendence/TransCompiler",
 
     # Unclear if DirectXFont builds.
     # "Alchemy/DirectXFont",
@@ -27,5 +27,11 @@ executable("unittests") {
   deps = [
     "deps/googletest:gtest_main",
     "smoke:unittests",
+  ]
+}
+
+executable("TransCompiler") {
+  deps = [
+    "//Transcendence/TransCompiler",
   ]
 }

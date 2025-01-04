@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CSystem> CSystem::m_PropertyTable = std::array<TPropertyHandler<CSystem>::SPropertyDef, 3> {{
+TPropertyHandler<CSystem> CSystem::m_PropertyTable = std::array<TPropertyHandler<CSystem>::SPropertyDef, 3u> {{
 		{
 		"randomEncounterObjTable",			"table of random encounters",
 		[](const CSystem &System, const CString &sProperty) 

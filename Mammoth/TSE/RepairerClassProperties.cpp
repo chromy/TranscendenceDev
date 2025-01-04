@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CDeviceItem> CRepairerClass::m_PropertyTable = std::array<TPropertyHandler<CDeviceItem>::SPropertyDef, 2> {{
+TPropertyHandler<CDeviceItem> CRepairerClass::m_PropertyTable = std::array<TPropertyHandler<CDeviceItem>::SPropertyDef, 2u> {{
 		{
 		"regen",						"armor regen",
 		[](const CDeviceItem &RepairerItem, const CString &sProperty) 

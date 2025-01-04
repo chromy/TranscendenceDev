@@ -5,7 +5,7 @@
 
 #include "PreComp.h"
 
-TPropertyHandler<CSystemType> CSystemType::m_PropertyTable = std::array<TPropertyHandler<CSystemType>::SPropertyDef, 1> {{
+TPropertyHandler<CSystemType> CSystemType::m_PropertyTable = std::array<TPropertyHandler<CSystemType>::SPropertyDef, 1u> {{
 		{
 		"name",					"name of template",
 		[](const CSystemType &Type, const CString &sProperty) 

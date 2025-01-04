@@ -44,6 +44,24 @@ source_set("unittests_jpegutil") {
   ]
 }
 
+source_set("unittests_tse") {
+  testonly = true
+  sources = [ "tse_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+    "//Mammoth/TSE",
+  ]
+}
+
+source_set("unittests_tsui") {
+  testonly = true
+  sources = [ "tsui_unittest.cc" ]
+  deps = [
+    "//deps/googletest:gtest",
+    "//Mammoth/TSUI",
+  ]
+}
+
 group("unittests") {
   testonly = true
   deps = [
@@ -52,5 +70,7 @@ group("unittests") {
     ":unittests_xmlutil",
     ":unittests_jpegutil",
     ":unittests_empty",
+    ":unittests_tse",
+    ":unittests_tsui",
   ]
 }

@@ -12,7 +12,7 @@
 #define PROPERTY_SHIPS_DESTROYED_BY_PLAYER		CONSTLIT("shipsDestroyedByPlayer")
 #define PROPERTY_STATIONS_DESTROYED_BY_PLAYER	CONSTLIT("stationsDestroyedByPlayer")
 
-TPropertyHandler<CSovereign> CSovereign::m_PropertyTable = std::array<TPropertyHandler<CSovereign>::SPropertyDef, 1> {{
+TPropertyHandler<CSovereign> CSovereign::m_PropertyTable = std::array<TPropertyHandler<CSovereign>::SPropertyDef, 1u> {{
 		{
 		"alignment",		"Sovereign alignment",
 		[](const CSovereign &Sovereign, const CString &sProperty) 
