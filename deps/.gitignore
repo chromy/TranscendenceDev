@@ -10,3 +10,6 @@
 /libunwind/
 /ninja/
 /windows-sdk/
+/windows/
+/xwin/
+/xwin-cache/

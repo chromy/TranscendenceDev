@@ -26,6 +26,7 @@ import tempfile
 import time
 import zipfile
 import bz2
+import json
 
 from collections import namedtuple
 from platform import system, machine
@@ -61,7 +62,7 @@ CLEANUP_OLD_DIRS = []
 
 
 # Dependencies required to build code on the host or when targeting desktop OS.
-BUILD_DEPS_TOOLCHAIN_HOST = [
+DEPS = [
     # GN. From https://chrome-infra-packages.appspot.com/dl/gn/gn/.
     # git_revision:0725d7827575b239594fbc8fd5192873a1d62f44 .
     Dependency(
@@ -158,17 +159,25 @@ BUILD_DEPS_TOOLCHAIN_HOST = [
         "de999de22c2a90ace9f16c8202fea7d5b57b6f039bd34691960f6edd30a3d413",
         "linux", "x64"),
 
+    # xwin
+    Dependency(
+        "deps/xwin.tgz",
+        "https://github.com/Jake-Shadle/xwin/releases/download/0.6.6-rc.2/xwin-0.6.6-rc.2-aarch64-apple-darwin.tar.gz",
+        "f3c43c6cd73aa641e8979c67fe724b67bf81723719d6786adbcdca8e5a1975f9",
+        "darwin", "arm64"),
+    Dependency(
+        "deps/xwin.tgz",
+        "https://github.com/Jake-Shadle/xwin/releases/download/0.6.6-rc.2/xwin-0.6.6-rc.2-x86_64-unknown-linux-musl.tar.gz",
+        "577525d2ff6a135d4ae882c8c9f6f38c67b1d3d9fad8c8b41d7e55199741326a",
+        "linux", "x64"),
+
     Dependency(
         "deps/windows-sdk.zip",
         "https://commondatastorage.googleapis.com/tsundoku-io-deps/windows-sdk-2022-10.0.18362.1-ee9be1ebcc.zip",
         "8c74534541b3600d2cd1342c437ef722213623c3ac683516c996d833f2071b47",
         "all", "all"),
 
-]
-
-
-BUILD_DEPS_HOST = [
-    # Keep in sync with Android's //external/googletest/METADATA.
+    # Googletest
     Dependency(
         'deps/googletest',
         'https://android.googlesource.com/platform/external/googletest.git',
@@ -210,10 +219,16 @@ BUILD_DEPS_HOST = [
         'all', 'all'),
 ]
 
-ALL_DEPS = BUILD_DEPS_HOST + BUILD_DEPS_TOOLCHAIN_HOST
+ALL_DEPS = DEPS
 
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+XWIN_PATH = os.path.join(ROOT_DIR, "deps", "xwin", "xwin")
+XWIN_CACHE_PATH = os.path.join(ROOT_DIR, "deps", "xwin-cache")
+WINDOWS_TOOLCHAIN_PATH = os.path.join(ROOT_DIR, "deps", "windows")
+WINDOWS_TOOLCHAIN_STAMP_PATH = os.path.join(WINDOWS_TOOLCHAIN_PATH, "windows.stamp")
 
+WINDOWS_CRT_VERSION = "14.42.17.12"
+WINDOWS_SDK_VERSION = "10.0.26100"
 
 def CheckCallRetry(*args, **kwargs):
   """ Like subprocess.check_call, with retries up to 5 times. """
@@ -361,13 +376,60 @@ def CheckDepotToolsIsRecent():
   return False
 
 
+def FetchWindowsToolchain(args):
+  arch = ["x86", "x86_64"]
+
+  expected = {
+    "arch": arch,
+    "windows_sdk_version": WINDOWS_SDK_VERSION,
+    "windows_crt_version": WINDOWS_CRT_VERSION,
+  }
+
+  actual = None
+  try:
+    with open(WINDOWS_TOOLCHAIN_STAMP_PATH) as f:
+      actual = json.load(f)
+  except FileNotFoundError:
+    pass
+
+  if expected == actual:
+    return False
+
+  if args.check_only:
+    return True
+
+  cmd = [
+    XWIN_PATH,
+    "--accept-license",
+    "--arch",
+    ",".join(arch),
+    "--sdk-version",
+    WINDOWS_SDK_VERSION,
+    "--crt-version",
+    WINDOWS_CRT_VERSION,
+    "--cache-dir",
+    XWIN_CACHE_PATH,
+    "splat",
+    "--output",
+    WINDOWS_TOOLCHAIN_PATH,
+  ]
+
+  if args.build_os == "darwin" or args.build_os == "win":
+    cmd.append("--disable-symlinks")
+
+  subprocess.check_call(cmd)
+
+  with open(WINDOWS_TOOLCHAIN_STAMP_PATH, "w") as f:
+    json.dump(expected, f)
+
+  return True
+
+
 def Main():
   parser = argparse.ArgumentParser()
   parser.add_argument('--check-only')
   parser.add_argument('--filter', action='append')
   parser.add_argument('--verify', help='Check all URLs', action='store_true')
-  parser.add_argument(
-      '--no-toolchain', help='Do not download toolchain', action='store_true')
   parser.add_argument(
       '--build-os',
       default=system().lower(),
@@ -386,9 +448,7 @@ def Main():
   if not CheckDepotToolsIsRecent():
     return 1
 
-  deps = BUILD_DEPS_HOST
-  if not args.no_toolchain:
-    deps += BUILD_DEPS_TOOLCHAIN_HOST
+  deps = ALL_DEPS
   deps_updated = False
 
   for old_dir in CLEANUP_OLD_DIRS:
@@ -469,6 +529,9 @@ def Main():
       with open(compressed_dir_stamp, 'w') as stamp_file:
         stamp_file.write(dep.checksum)
       os.remove(local_path)
+
+
+  deps_updated |= FetchWindowsToolchain(args)
 
   if args.check_only:
     if not deps_updated:

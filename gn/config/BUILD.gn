@@ -72,9 +72,9 @@ config("runtime_library") {
   if (is_win) {
 
     ldflags += [
-      "-L" + rebase_path("//deps/windows-sdk/Windows Kits/10/Lib/10.0.18362.0/um/$current_cpu", root_build_dir),
-      "-L" + rebase_path("//deps/windows-sdk/Windows Kits/10/Lib/10.0.18362.0/ucrt/$current_cpu", root_build_dir),
       "-L" + rebase_path("//deps/windows-sdk/VC/Tools/MSVC/14.42.34433/lib/$current_cpu", root_build_dir),
+      "-L" + rebase_path("//deps/windows/sdk/lib/um/$current_cpu", root_build_dir),
+      "-L" + rebase_path("//deps/windows/sdk/lib/ucrt/$current_cpu", root_build_dir),
       "-lucrt",
       "-lvcruntime",
       "-lmsvcrt",
@@ -116,10 +116,10 @@ config("runtime_library") {
 
     cflags_cc += [
       "-isystem" + rebase_path("//deps/windows-sdk/VC/Tools/MSVC/14.42.34433/include", root_build_dir),
-      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/ucrt", root_build_dir),
-      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/shared", root_build_dir),
-      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/winrt", root_build_dir),
-      "-isystem" + rebase_path("//deps/windows-sdk/Windows Kits/10/Include/10.0.18362.0/um", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows/sdk/include/ucrt", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows/sdk/include/shared", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows/sdk/include/winrt", root_build_dir),
+      "-isystem" + rebase_path("//deps/windows/sdk/include/um", root_build_dir),
     ]
 
   }
