@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install wine
+        run: sudo apt-get install wine
       - name: Restore deps cached
         id: cache-deps-restore
         uses: actions/cache/restore@v4
