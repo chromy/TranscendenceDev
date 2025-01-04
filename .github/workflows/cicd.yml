@@ -15,7 +15,7 @@ jobs:
         run: msbuild /m /p:Configuration=Release /p:Platform=Win32 ./Transcendence/Transcendence.sln
 
   clang:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         target_os: [win]
@@ -26,11 +26,11 @@ jobs:
       - name: Install wine
         run: |
           sudo dpkg --add-architecture i386
-          sudo wget -nc https://dl.winehq.org/wine-builds/Release.key
-          sudo apt-key add Release.key
-          sudo apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
-          sudo apt-get update
-          sudo apt-get install -y winehq-stable
+          sudo mkdir -pm755 /etc/apt/keyrings
+          wget -O - https://dl.winehq.org/wine-builds/winehq.key | sudo gpg --dearmor -o /etc/apt/keyrings/winehq-archive.key -
+          sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/noble/winehq-noble.sources
+          sudo apt update
+          sudo apt install --install-recommends winehq-stable
       - name: Restore deps cached
         id: cache-deps-restore
         uses: actions/cache/restore@v4
