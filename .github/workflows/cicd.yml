@@ -44,6 +44,8 @@ jobs:
         run: ./tools/gn gen --args='target_os="${{ matrix.target_os }}" target_cpu="${{ matrix.target_cpu }}"' out/r
       - name: Build
         run: ./tools/ninja -C out/r
+      - name: Test
+        run: wine out/r/unittests
       - name: Store deps cached
         id: cache-deps-store
         uses: actions/cache/save@v4
