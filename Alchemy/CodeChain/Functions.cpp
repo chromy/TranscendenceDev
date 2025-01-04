@@ -20,7 +20,7 @@
 //		*	Any number of items (must be last)
 
 #include "PreComp.h"
-#include <Math.h>
+#include <math.h>
 #include "Functions.h"
 #include "TMathList.h"
 
