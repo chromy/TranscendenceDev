@@ -68,7 +68,7 @@ class CSystemEventList
 		void MoveEvent (int iIndex, CSystemEventList &Dest) { Dest.AddEvent(m_List[iIndex]); m_List.Delete(iIndex); }
 		void MoveEventForObjTo (const CSpaceObject &Obj, CSystemEventList &Dest);
 		void OnObjDestroyed (CSpaceObject *pObj);
-		void OnPlayerChangedShips (CSpaceObject &OldShip, CSpaceObject &NewShip, Gdi32SPlayerChangedShipsCtx &Options);
+		void OnPlayerChangedShips (CSpaceObject &OldShip, CSpaceObject &NewShip, SPlayerChangedShipsCtx &Options);
 		void OnStationDestroyed (CSpaceObject *pObj);
 		void ReadFromStream (SLoadCtx &Ctx);
 		void RemoveEvent (int iIndex) { delete m_List[iIndex]; m_List.Delete(iIndex); }
