@@ -171,12 +171,6 @@ DEPS = [
         "577525d2ff6a135d4ae882c8c9f6f38c67b1d3d9fad8c8b41d7e55199741326a",
         "linux", "x64"),
 
-    Dependency(
-        "deps/windows-sdk.zip",
-        "https://commondatastorage.googleapis.com/tsundoku-io-deps/windows-sdk-2022-10.0.18362.1-ee9be1ebcc.zip",
-        "8c74534541b3600d2cd1342c437ef722213623c3ac683516c996d833f2071b47",
-        "all", "all"),
-
     # Googletest
     Dependency(
         'deps/googletest',
