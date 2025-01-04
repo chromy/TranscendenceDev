@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "TSEEvents.h"
-
 enum EStorageScopes
 	{
 	storeUnknown				= -1,
