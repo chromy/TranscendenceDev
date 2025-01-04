@@ -24,11 +24,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install wine
+        sudo: yes
         run: |
-          sudo apt-get install wine
-          sudo add-apt-repository ppa:ubuntu-wine/ppa
-          sudo apt-get update
-          sudo apt-get install wine
+          dpkg --add-architecture i386
+          wget -nc https://dl.winehq.org/wine-builds/Release.key
+          apt-key add Release.key
+          apt-add-repository https://dl.winehq.org/wine-builds/ubuntu/
+          apt-get update
+          apt-get install -y winehq-stable
       - name: Restore deps cached
         id: cache-deps-restore
         uses: actions/cache/restore@v4
