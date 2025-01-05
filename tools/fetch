@@ -168,7 +168,7 @@ DEPS = [
     Dependency(
         "deps/llvm.tar.zstd",
         "https://storage.googleapis.com/tsundoku-io-deps/llvm-19.1.6-linux-x64.tar.zstd",
-        "8b0abbf354131799ad4c7519b11aff597e2039ca793019c4a69cdfc73cba6e46",
+        "04555e3e4026dcc8577922a5ead01988408c14acd69fb3d656f90f860325464f",
         "linux", "x64"),
 
 
