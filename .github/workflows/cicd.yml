@@ -35,7 +35,7 @@ jobs:
         id: cache-deps-restore
         uses: actions/cache/restore@v4
         with:
-          key: ${{ runner.os }}-${{ matrix.target_os }}-${{ matrix.target_cpu }}-deps
+          key: ${{ runner.os }}-${{ hashFiles('deps/fetch') }}-deps
           path: |
             deps
       - name: Install deps
