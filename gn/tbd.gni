@@ -23,12 +23,15 @@ template("tbd") {
       ":TransCompiler",
     ]
     inputs = []
+    wine_path = exec_script("//tools/which", ["wine"], "trim string", [])
+
     args = [
-      "/opt/homebrew/bin/wine",
+      wine_path,
       "TransCompiler",
       "/input:" + rebase_path(invoker.input, root_build_dir),
       "/output:" + rebase_path(invoker.output, root_build_dir),
     ]
+
     outputs = [ invoker.output ]
   }
 }
