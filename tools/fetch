@@ -214,7 +214,7 @@ def GetArch():
   elif arch == 'aarch64':
     return 'arm64'
   else:
-    # Assume everything else is x64 matching previous behaviour.
+    # Assume everything else is x64
     return 'x64'
 
 

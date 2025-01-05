@@ -27,6 +27,7 @@ script however you will need to install the following yourself:
 
 - `git`
 - `python`
+- `curl`
 - `wine` (if you wish to run the Windows binaries on Linux/Mac)
 
 ## Build
