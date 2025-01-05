@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+
+from __future__ import print_function
+
+import os
+import subprocess
+import sys
+import argparse
+import tempfile
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+TOOLS_DIR = os.path.join(ROOT_DIR, "tools")
+
+parser = argparse.ArgumentParser(description="Invoke gn binary")
+parser.add_argument("--capture-stdout")
+parser.add_argument("--stamp", default=None)
+parser.add_argument("path")
+parser.add_argument("args", metavar="ARG", nargs=argparse.REMAINDER)
+args = parser.parse_args()
+
+path = args.path
+if not os.path.isabs(path):
+  path = "./" + path
+binary_args = [path] + args.args
+
+stdout = None
+if args.capture_stdout:
+  stdout = tempfile.NamedTemporaryFile()
+
+env = dict(**os.environ)
+env["PATH"] = f"{TOOLS_DIR}:" + env["PATH"]
+return_code = subprocess.call(binary_args, stdout=stdout, env=env)
+
+if return_code == 0:
+  if stdout:
+    try:
+      os.unlink(args.capture_stdout)
+    except FileNotFoundError:
+      pass
+    os.link(stdout.name, args.capture_stdout)
+  if args.stamp:
+    with open(args.stamp, "w"):
+      os.utime(args.stamp, None)
+else:
+  print("{} failed with exit code {}".format(path, return_code))
+
+sys.exit(return_code)

@@ -1,3 +1,4 @@
+import("//gn/tbd.gni")
 
 group("everything") {
   deps = [
@@ -41,3 +42,31 @@ executable("Transcendence") {
     "//Transcendence/Transcendence:TranscendenceMain",
   ]
 }
+
+copy("package_exe") {
+  sources = [
+    "$root_build_dir/Transcendence",
+  ]
+  outputs = [
+    "$root_build_dir/game/{{source_name_part}}.exe",
+  ]
+  deps = [
+    ":Transcendence",
+  ]
+}
+
+tbd("package_tbd") {
+  input = "//Transcendence/TransCore/Transcendence.xml"
+  output = "$root_build_dir/game/Transcendence.tdb"
+  deps = [
+    ":TransCompiler",
+  ]
+}
+
+group("package") {
+  deps = [
+    ":package_exe",
+    ":package_tbd",
+  ]
+}
+

@@ -8,17 +8,17 @@ in development since [2003](https://web.archive.org/web/20031209010545/http://ww
 Originally distributed as freeware by solo-developer George Moromisato
 the core engine of Transcendence was open-sourced circa 2012 and the current
 official [unified repo](https://github.com/kronosaur/TranscendenceDev) stood up in 2015.
-
 Transcendence is a x86 Windows app using DirectX (fairly directly,
 Transcendence makes minimal use of the GPU) built with MSVC.
 
 The initial goal is to:
+- Create a clang build of Transcendence
 - Maintain cross compilation builds from {Linux/x86_64, Mac/arm64, Mac/x86_64} to Windows/x86
 - Upstream changes to the official repo where possible.
 
-Making it possible to build Transcendence on other popular OSs (Linux, Mac) using a familiar toolchain on those platforms (clang):
-- Widens the pool of potential contributors
-- Paves the way for native ports and similar pro
+The idea is that making it possible to build Transcendence on other popular OSs (Linux, Mac) using a familiar toolchain on those platforms (clang):
+- Widens the pool of potential contributors to Transcendence
+- Paves the way for native ports and similar projects
 
 ## Requirements
 
@@ -31,7 +31,7 @@ script however you will need to install the following yourself:
 
 ## Build
 
-The minimal instructions to get started:
+The minimal instructions to get started with the `clang` build:
 
 ```bash
 git clone https://github.com/chromy/TranscendenceDev.git
@@ -41,6 +41,7 @@ git checkout clang
 ./tools/gn gen --args='target_os="win" target_cpu="x86"' out/r
 ./tools/ninja -C out/r
 wine out/r/unittests
+wine out/r/game/Transcendence.exe
 ```
 
 Breaking those steps down with explanations:
@@ -57,38 +58,52 @@ branch contains the clang build, CI, this README, etc.
 git checkout clang
 ```
 
-Download build dependencies. This downloads:
+Download build dependencies. This script downloads:
 - the Windows SDK / sysroot
-- clang (to)
-- gn/ninja (buildtools similar to make/cmake/Bazel)
+- `clang` (we vendor a fixed compiler version for consistency)
+- `gn`/`ninja` (buildtools similar to make/cmake/Bazel)
 - etc
 
 ```bash
 ./tools/fetch
 ```
 
-Generate an out directory (`out/r`) targeting `windows/x86`.
+Generate an out directory (`out/r`) targeting `windows/x86` using `gn`.
 The `host_os` and `host_cpu` args are set automatically.
+If you are familiar with autotools this is similar to the `./configure` step
+in that it is a one-off step which creates a lower level description of
+the build.
 
-If you are familiar with autotools this is simialr to the `./configure` step
-in that it is a one-off step TKTK
 
 ```bash
 ./tools/gn gen --args='target_os="win" target_cpu="x86"' out/r
 ```
 
-TKTK
-Equivilent 
+`ninja` is similar to `make`.
+
 ```bash
 ./tools/ninja -C out/r
 ```
 
-TKTK
+There is a small suite of smoke tests which try to build, link,
+and (where feasible) exercise the various Transcendence components:
 ```bash
 wine out/r/unittests
 ```
 
-## History of ports
-https://github.com/GambitDash/Transport
+Finally run `Transcendence` itself:
+```bash
+wine out/r/game/Transcendence.exe
+```
+
+## Contributing
+
+If you wish to contribute to the official Transcendence repository see [here](https://github.com/kronosaur/TranscendenceDev).
+If you wish to help with the `clang` build see [CONTRIBUTING.md].
+
+
+## A brief history of attempted ports
+
+- https://github.com/GambitDash/Transport
 
 
