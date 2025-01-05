@@ -67,11 +67,15 @@ template("clang_toolchain") {
     clang_tools_root = invoker.clang_tools_root
     clang = "$clang_tools_root/clang"
     clang_pp = "$clang_tools_root/clang++"
-    # TODO: fix:
-    rc = "llvm-windres"
   } else {
     clang = "clang"
     clang_pp = "clang++"
+  }
+
+  if (defined(invoker.llvm_tools_root)) {
+    llvm_tools_root = invoker.llvm_tools_root
+    rc = "$llvm_tools_root/llvm-windres"
+  } else {
     rc = "llvm-windres"
   }
 
@@ -192,6 +196,7 @@ if (target_os == "win" && target_cpu == "arm64") {
 clang_toolchain("host") {
   os = host_os
   cpu = host_cpu
+  llvm_tools_root = rebase_path("//deps/llvm")
   clang_tools_root = rebase_path("//deps/clang/bin")
   clang_target_triple = host_triple
 }
@@ -199,6 +204,7 @@ clang_toolchain("host") {
 clang_toolchain("target") {
   os = target_os
   cpu = target_cpu
+  llvm_tools_root = rebase_path("//deps/llvm")
   clang_tools_root = rebase_path("//deps/clang/bin")
   clang_target_triple = target_triple
 }

@@ -159,6 +159,19 @@ DEPS = [
         "de999de22c2a90ace9f16c8202fea7d5b57b6f039bd34691960f6edd30a3d413",
         "linux", "x64"),
 
+    # llvm
+    Dependency(
+        "deps/llvm.tar.zstd",
+        "https://storage.googleapis.com/tsundoku-io-deps/llvm-19.1.6-mac-arm64.tar.zstd",
+        "e1aab11d4dd68441b33978c911c993e31b6154f98c8a2301e924773c370431a6",
+        "darwin", "arm64"),
+    Dependency(
+        "deps/llvm.tar.zstd",
+        "https://storage.googleapis.com/tsundoku-io-deps/llvm-19.1.6-linux-x64.tar.zstd",
+        "8b0abbf354131799ad4c7519b11aff597e2039ca793019c4a69cdfc73cba6e46",
+        "linux", "x64"),
+
+
     # xwin
     Dependency(
         "deps/xwin.tgz",
@@ -384,6 +397,9 @@ def FetchWindowsToolchain(args):
   return True
 
 
+COMPRESSED_EXTS = [".zip", ".tgz", ".tbz2", ".tar.zstd"]
+
+
 def Main():
   parser = argparse.ArgumentParser()
   parser.add_argument('--check-only')
@@ -427,8 +443,15 @@ def Main():
       deps_updated |= CheckoutGitRepo(local_path, dep.source_url, dep.checksum,
                                       args.check_only)
       continue
-    is_compressed = any([local_path.endswith(ext) for ext in ['.zip', '.tgz', '.tbz2']])
-    compressed_target_dir = os.path.splitext(local_path)[0] if is_compressed else None
+    is_compressed = any([local_path.endswith(ext) for ext in COMPRESSED_EXTS])
+
+    compressed_target_dir = None
+    if is_compressed:
+      compressed_target_dir = local_path
+      for ext in COMPRESSED_EXTS:
+        compressed_target_dir = compressed_target_dir.removesuffix(ext)
+
+    compressed_target_dir = local_path.split(".")[0] if is_compressed else None
     compressed_dir_stamp = os.path.join(compressed_target_dir, '.stamp') if is_compressed else None
 
     if ((not is_compressed and HashLocalFile(local_path) == dep.checksum) or
@@ -462,6 +485,9 @@ def Main():
       if local_path.endswith('.tgz'):
         MkdirRecursive(compressed_target_dir)
         subprocess.check_call(['tar', '-oxf', local_path], cwd=compressed_target_dir)
+      if local_path.endswith('.tar.zstd'):
+        MkdirRecursive(compressed_target_dir)
+        subprocess.check_call(['tar', '--zstd', '-xf', local_path], cwd=compressed_target_dir)
       elif local_path.endswith('.zip'):
         with zipfile.ZipFile(local_path, 'r') as zf:
           for info in zf.infolist():

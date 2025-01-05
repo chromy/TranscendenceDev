@@ -12,6 +12,7 @@ config("suppressions") {
     # is the common in the code base.
     "-Wno-non-pod-varargs",
 
+    # TODO(clang): Remove the 
     "-Wno-inconsistent-missing-override",
     "-Wno-switch",
     "-Wno-pragma-pack",
@@ -19,6 +20,10 @@ config("suppressions") {
     "-Wno-delayed-template-parsing-in-cxx20",
     "-Wno-return-type",
     "-Wno-nonportable-include-path",
+    # e.g. if (header.bfType != 'MB')
+    "-Wno-multichar",
+    # e.g. á in "Barják András"
+    "-Wno-invalid-source-encoding",
   ]
 }
 

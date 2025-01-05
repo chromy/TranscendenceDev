@@ -4,6 +4,7 @@
 /clang_format/
 /gn/
 /googletest/
+/llvm/
 /libbacktrace/
 /libcxx/
 /libcxxabi/
