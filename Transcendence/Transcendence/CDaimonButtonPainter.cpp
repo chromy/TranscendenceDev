@@ -12,7 +12,7 @@ const int STYLE_MAIN_RING1_WIDTH =			4;	//	Width of outer edge
 const int STYLE_MAIN_RING2_WIDTH =			8;	//	Width of blocks around edge
 const int STYLE_MAIN_DETAIL_COUNT =			6;	//	Number of blocks around edge
 
-#define STYLECOLOR(x)						(CArtifactAwakenVisuals::GetColor(CArtifactAwakenVisuals::##x))
+#define STYLECOLOR(x)						(CArtifactAwakenVisuals::GetColor(CArtifactAwakenVisuals::x))
 
 CDaimonButtonPainter::CDaimonButtonPainter (const CVisualPalette &VI) :
 		m_VI(VI),

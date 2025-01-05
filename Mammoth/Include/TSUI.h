@@ -79,6 +79,7 @@ class IHICommand
 class IHIController : public IHICommand
 	{
 	public:
+		IHIController (CHumanInterface &HI) : IHICommand(HI) { }
 		IHIController (void) : IHICommand(CreateHI()) { }
 		virtual ~IHIController (void) { }
 

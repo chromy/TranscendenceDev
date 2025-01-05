@@ -35,7 +35,7 @@ class CArtifactAwakenVisuals
 		static void PaintGlyph (CG32bitImage &Dest, EGlyphs iGlyph, int x, int y, int cxWidth, int cyHeight, CG32bitPixel rgbColor);
 	};
 
-#define AA_STYLECOLOR(x)						(CArtifactAwakenVisuals::GetColor(CArtifactAwakenVisuals::##x))
+#define AA_STYLECOLOR(x)						(CArtifactAwakenVisuals::GetColor(CArtifactAwakenVisuals::x))
 
 class CArtifactAICorePainter
 	{

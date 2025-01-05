@@ -101,6 +101,7 @@ class CMenuDisplay
 
 		struct SOptions
 			{
+			SOptions() {}
 			EPositions iPos = posCenter;
 			bool bHideShortCutKeys = false;
 			};

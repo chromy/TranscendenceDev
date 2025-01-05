@@ -18,6 +18,7 @@ config("suppressions") {
     "-Wno-microsoft-cast",
     "-Wno-delayed-template-parsing-in-cxx20",
     "-Wno-return-type",
+    "-Wno-nonportable-include-path",
   ]
 }
 

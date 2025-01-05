@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Alchemy.h"
-#include "..\TSUI\TSUI.h"
+#include "TSUI.h"
 
 //	Application definitions
 

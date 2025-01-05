@@ -1,0 +1,22 @@
+source_set("TransExplorer") {
+  sources = [
+    "TransExplorer.h",
+    "stdafx.h",
+    "CExplorerModel.cpp",
+    "TransMain.cpp",
+    "TransMain.h",
+    "TransExplorer.cpp",
+    "Resource.h",
+    "stdafx.cpp",
+    "CExplorerController.cpp",
+  ]
+  deps = [
+    "//Alchemy",
+    "//Mammoth/TSE",
+    "//Mammoth/TSUI",
+  ]
+  include_dirs = [
+    ".",
+  ]
+}
+

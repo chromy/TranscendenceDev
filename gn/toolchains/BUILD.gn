@@ -60,15 +60,19 @@ template("clang_toolchain") {
 
   # Optional:
   # clang_target_root
+  # TODO: unused?
   # systroot_path
 
   if (defined(invoker.clang_tools_root)) {
     clang_tools_root = invoker.clang_tools_root
     clang = "$clang_tools_root/clang"
     clang_pp = "$clang_tools_root/clang++"
+    # TODO: fix:
+    rc = "llvm-windres"
   } else {
     clang = "clang"
     clang_pp = "clang++"
+    rc = "llvm-windres"
   }
 
   if (defined(invoker.sysroot_path)) {
@@ -112,6 +116,26 @@ template("clang_toolchain") {
       command = "$clang_pp -MMD -MF $depfile $target_flag $sysroot_flag {{include_dirs}} {{cflags}} {{cflags_objcc}} -c {{source}} -o {{output}}"
       outputs = [ "{{source_out_dir}}/{{source_name_part}}.o" ]
       description = "OBJCXX {{source}}"
+    }
+
+    tool("rc") {
+
+      rc_includes = [
+        "-I"+rebase_path("//deps/windows/crt/include", root_build_dir),
+        "-I"+rebase_path("//deps/windows/crt/include", root_build_dir),
+        "-I"+rebase_path("//deps/windows/sdk/include/ucrt", root_build_dir),
+        "-I"+rebase_path("//deps/windows/sdk/include/shared", root_build_dir),
+        "-I"+rebase_path("//deps/windows/sdk/include/winrt", root_build_dir),
+        "-I"+rebase_path("//deps/windows/sdk/include/um", root_build_dir),
+        # TODO: fix
+        "-I"+rebase_path("//Transcendence/Transcendence", root_build_dir),
+      ]
+
+      rc_includes_args = string_join(" ", rc_includes)
+
+      command = "$rc $rc_includes_args {{source}} -o {{output}}"
+      outputs = [ "{{source_out_dir}}/{{source_name_part}}.res" ]
+      description = "RC {{output}}"
     }
 
     tool("link") {

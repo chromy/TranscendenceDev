@@ -35,3 +35,9 @@ executable("TransCompiler") {
     "//Transcendence/TransCompiler",
   ]
 }
+
+executable("Transcendence") {
+  deps = [
+    "//Transcendence/Transcendence:TranscendenceMain",
+  ]
+}

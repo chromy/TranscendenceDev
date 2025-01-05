@@ -1,7 +1,7 @@
 #pragma once
 
 #include "resource.h"
-#include "..\TSE\TSE.h"
+#include "TSE.h"
 
 //	Data Model -----------------------------------------------------------------
 
