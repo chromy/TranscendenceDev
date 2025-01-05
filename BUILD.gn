@@ -58,9 +58,6 @@ copy("package_exe") {
 tbd("package_tbd") {
   input = "//Transcendence/TransCore/Transcendence.xml"
   output = "$root_build_dir/game/Transcendence.tdb"
-  deps = [
-    ":TransCompiler",
-  ]
 }
 
 group("package") {

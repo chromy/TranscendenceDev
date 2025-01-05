@@ -176,41 +176,6 @@ DEPS = [
         'deps/googletest',
         'https://android.googlesource.com/platform/external/googletest.git',
         '609281088cfefc76f9d0ce82e1ff6c30cc3591e5', 'all', 'all'),
-
-    # libc++, libc++abi and libunwind for Linux where we need to rebuild the C++
-    # lib from sources. Keep the SHA1s in sync with Chrome's src/buildtools/DEPS.
-    Dependency(
-        'deps/libcxx',
-        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxx.git',
-        '852bc6746f45add53fec19f3a29280e69e358d44', 'all', 'all'),
-    Dependency(
-        'deps/libcxxabi',
-        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxxabi.git',
-        'a37a3aa431f132b02a58656f13984d51098330a2', 'all', 'all'),
-    Dependency(
-        'deps/libunwind',
-        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libunwind.git',
-        '419b03c0b8f20d6da9ddcb0d661a94a97cdd7dad', 'all', 'all'),
-
-    # Keep in sync with chromium DEPS.
-    Dependency(
-        'deps/libfuzzer',
-        'https://chromium.googlesource.com/chromium/llvm-project/compiler-rt/lib/fuzzer.git',
-        'debe7d2d1982e540fbd6bd78604bf001753f9e74', 'linux', 'all'),
-
-    # Benchmarking tool.
-    Dependency(
-        'deps/benchmark',
-        'https://chromium.googlesource.com/external/github.com/google/benchmark.git',
-        'e991355c02b93fe17713efe04cbc2e278e00fdbd', 'all', 'all'),
-
-    # Libbacktrace, for stacktraces in Linux/Android debug builds.
-    # From https://github.com/ianlancetaylor/libbacktrace/archive/177940370e4a6b2509e92a0aaa9749184e64af43.zip
-    Dependency(
-        'deps/libbacktrace.zip',
-        'https://storage.googleapis.com/perfetto/libbacktrace-14818b7783eeb9a56c3f0fca78cefd3143f8c5f6.zip',
-        '0d09295938155aa84d9a6049f63df8cd2def3a28302b3550ea3ead9100b3d086',
-        'all', 'all'),
 ]
 
 ALL_DEPS = DEPS
