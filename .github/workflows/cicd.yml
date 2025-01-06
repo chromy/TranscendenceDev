@@ -46,6 +46,11 @@ jobs:
         run: ./tools/ninja -C out/r
       - name: Test
         run: wine out/r/unittests
+      - name: Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: transcendence-clang-${{ matrix.target_os }}-${{ matrix.target_cpu }}
+          path: out/r/game/
       - name: Store deps cached
         id: cache-deps-store
         uses: actions/cache/save@v4
