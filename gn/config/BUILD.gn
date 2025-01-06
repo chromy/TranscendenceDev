@@ -6,22 +6,31 @@ config("compiler") {
 
 config("suppressions") {
   cflags = [
+    # TODO(clang): Investigate and fix if possible:
     # The pattern of `if (error = foo()))` is common in the code base.
     "-Wno-parentheses",
+    # TODO(clang): Investigate and fix if possible:
     # The pattern of `::fooLog("Something %s", aCString);`
     # is the common in the code base.
     "-Wno-non-pod-varargs",
-
-    # TODO(clang): Remove the 
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-inconsistent-missing-override",
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-switch",
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-pragma-pack",
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-microsoft-cast",
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-delayed-template-parsing-in-cxx20",
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-return-type",
+    # TODO(clang): Investigate and fix if possible:
     "-Wno-nonportable-include-path",
+    # TODO(clang): Investigate and fix if possible:
     # e.g. if (header.bfType != 'MB')
     "-Wno-multichar",
+    # TODO(clang): Investigate and fix if possible:
     # e.g. á in "Barják András"
     "-Wno-invalid-source-encoding",
   ]
@@ -34,11 +43,11 @@ config("compiler_config") {
     ":runtime_library",
   ]
   cflags = [
+    # TODO(clang): enable -Wall
     #"-Wall",
+    # TODO(clang): enable -Wextra
     #"-Wextra",
-    #"-Wpedantic",
-
-    # TODO(chromy): enable -Werror
+    # TODO(clang): enable -Werror
     #"-Werror",
     "-fcolor-diagnostics",
   ]
@@ -102,6 +111,7 @@ config("runtime_library") {
       "-lodbccp32",
       "-lshell32",
 
+      # TODO(clang): resolve somehow
       # Uppercase .Lib suffix causes problems:
       #"-lGdi32",
       #"-lAdvapi32",
@@ -112,13 +122,6 @@ config("runtime_library") {
 
       # Unclear if this is correct or not.
       "--for-linker=-safeseh:no",
-
-      #"-llibucrt",
-      #"-llibvcruntime",
-      #"-llibcmt",
-      #"-llibcpmt",
-
-      #"-v",
     ]
 
     cflags += [
@@ -131,18 +134,12 @@ config("runtime_library") {
       "-isystem" + rebase_path("//deps/windows/sdk/include/shared", root_build_dir),
       "-isystem" + rebase_path("//deps/windows/sdk/include/winrt", root_build_dir),
       "-isystem" + rebase_path("//deps/windows/sdk/include/um", root_build_dir),
-
-      #"-v",
     ]
 
     cflags_cc += [
     ]
 
   }
-
-  #if (is_linux) {
-  #  configs = [ "linux:runtime_library" ]
-  #}
 }
 
 # Default optimisation level. Exactly one of:

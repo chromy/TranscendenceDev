@@ -3,55 +3,6 @@
 assert(current_os == target_os && current_cpu == target_cpu,
        "Assumptions on current_xxx in this file have been violated")
 
-#  tool("alink") {
-#    command = "rm -f {{output}} && ar rcs {{output}} {{inputs}}"
-#    description = "AR {{target_output_name}}{{output_extension}}"
-#    outputs =
-#        [ "{{target_out_dir}}/{{target_output_name}}{{output_extension}}" ]
-#    default_output_extension = ".a"
-#    output_prefix = "lib"
-#  }
-
-#  tool("solink") {
-#    soname = "{{target_output_name}}{{output_extension}}"  # e.g. "libfoo.so".
-#    sofile = "{{output_dir}}/$soname"
-#    rspfile = soname + ".rsp"
-#    if (is_mac) {
-#      os_specific_option = "-install_name @executable_path/$sofile"
-#      rspfile_content = "{{inputs}} {{solibs}} {{libs}}"
-#    } else {
-#      os_specific_option = "-Wl,-soname=$soname"
-#      rspfile_content = "-Wl,--whole-archive {{inputs}} {{solibs}} -Wl,--no-whole-archive {{libs}}"
-#    }
-#    command = "g++ -shared {{ldflags}} -o $sofile $os_specific_option @$rspfile"
-#    description = "SOLINK $soname"
-#    # Use this for {{output_extension}} expansions unless a target manually
-#    # overrides it (in which case {{output_extension}} will be what the target
-#    # specifies).
-#    default_output_extension = ".so"
-#    # Use this for {{output_dir}} expansions unless a target manually overrides
-#    # it (in which case {{output_dir}} will be what the target specifies).
-#    default_output_dir = "{{root_out_dir}}"
-#    outputs = [ sofile ]
-#    link_output = sofile
-#    depend_output = sofile
-#    output_prefix = "lib"
-#  }
-#
-#  tool("link") {
-#    outfile = "{{target_output_name}}{{output_extension}}"
-#    rspfile = "$outfile.rsp"
-#    if (is_mac) {
-#      command = "g++ {{ldflags}} -o $outfile @$rspfile {{solibs}} {{libs}}"
-#    } else {
-#      command = "g++ {{ldflags}} -o $outfile -Wl,--start-group @$rspfile {{solibs}} -Wl,--end-group {{libs}}"
-#    }
-#    description = "LINK $outfile"
-#    default_output_dir = "{{root_out_dir}}"
-#    rspfile_content = "{{inputs}}"
-#    outputs = [ outfile ]
-#  }
-
 template("clang_toolchain") {
   assert(defined(invoker.clang_target_triple),
          "clang_target_triple must be defined")
@@ -59,9 +10,8 @@ template("clang_toolchain") {
   assert(defined(invoker.os), "os must be defined")
 
   # Optional:
-  # clang_target_root
-  # TODO: unused?
-  # systroot_path
+  # clang_tools_root
+  # llvm_tools_root
 
   if (defined(invoker.clang_tools_root)) {
     clang_tools_root = invoker.clang_tools_root
@@ -123,7 +73,6 @@ template("clang_toolchain") {
     }
 
     tool("rc") {
-
       rc_includes = [
         "-I"+rebase_path("//deps/windows/crt/include", root_build_dir),
         "-I"+rebase_path("//deps/windows/crt/include", root_build_dir),
@@ -131,7 +80,7 @@ template("clang_toolchain") {
         "-I"+rebase_path("//deps/windows/sdk/include/shared", root_build_dir),
         "-I"+rebase_path("//deps/windows/sdk/include/winrt", root_build_dir),
         "-I"+rebase_path("//deps/windows/sdk/include/um", root_build_dir),
-        # TODO: fix
+        # TODO(clang): This should be target dependent
         "-I"+rebase_path("//Transcendence/Transcendence", root_build_dir),
       ]
 
