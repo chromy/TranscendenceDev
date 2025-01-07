@@ -1,0 +1,8 @@
+config("libcxx_config") {
+  include_dirs = [ "." ]
+}
+
+source_set("libcxx") {
+  inputs = [ "__config_site" ]
+  public_configs = [ ":libcxx_config" ]
+}

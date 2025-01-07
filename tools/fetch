@@ -171,7 +171,7 @@ DEPS = [
         "0ab548548a92bd0d2b2db9ee5869dc75efca4f7e9607f3afa55b4bc4623c9ef8",
         "linux", "x64"),
 
-    # xwin
+    # xwin, for the Windows toolchain
     Dependency(
         "deps/xwin.tgz",
         "https://github.com/Jake-Shadle/xwin/releases/download/0.6.6-rc.2/xwin-0.6.6-rc.2-aarch64-apple-darwin.tar.gz",
@@ -182,6 +182,14 @@ DEPS = [
         "https://github.com/Jake-Shadle/xwin/releases/download/0.6.6-rc.2/xwin-0.6.6-rc.2-x86_64-unknown-linux-musl.tar.gz",
         "577525d2ff6a135d4ae882c8c9f6f38c67b1d3d9fad8c8b41d7e55199741326a",
         "linux", "x64"),
+
+    # macOS, 
+    Dependency(
+        "deps/MacOSX.tgz",
+        "https://github.com/alexey-lysiuk/macos-sdk/releases/download/14.5/MacOSX14.5.tar.xz",
+        "f6acc6209db9d56b67fcaf91ec1defe48722e9eb13dc21fb91cfeceb1489e57e",
+        "all", "all"),
+
 
     # Googletest
     Dependency(

@@ -1,7 +1,4 @@
 config("compiler") {
-  if (is_linux) {
-    configs = [ "linux:compiler" ]
-  }
 }
 
 config("suppressions") {
@@ -83,11 +80,18 @@ config("executable_config") {
 
 config("runtime_library") {
   cflags = []
-  cflags_cc = [ "-nostdinc++" ]
+  cflags_cc = [
+    "-nostdinc++",
+  ]
   ldflags = [
     "-nostdlib",
     "-nostdlib++",
   ]
+
+  if (is_mac) {
+
+  }
+
 
   if (is_win) {
 

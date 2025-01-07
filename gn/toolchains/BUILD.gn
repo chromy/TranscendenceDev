@@ -30,7 +30,7 @@ template("clang_toolchain") {
   }
 
   if (defined(invoker.sysroot_path)) {
-    sysroot_path = invoker.sysroot_path
+    sysroot_path = rebase_path(invoker.sysroot_path, root_build_dir)
     sysroot_flag = "--sysroot $sysroot_path"
   } else {
     sysroot_flag = ""
@@ -148,6 +148,9 @@ clang_toolchain("host") {
   llvm_tools_root = rebase_path("//deps/llvm")
   clang_tools_root = rebase_path("//deps/clang/bin")
   clang_target_triple = host_triple
+  if (os == "mac") {
+    sysroot_path = "//deps/MacOSX"
+  }
 }
 
 clang_toolchain("target") {
@@ -156,4 +159,7 @@ clang_toolchain("target") {
   llvm_tools_root = rebase_path("//deps/llvm")
   clang_tools_root = rebase_path("//deps/clang/bin")
   clang_target_triple = target_triple
+  if (os == "mac") {
+    sysroot_path = "//deps/MacOSX"
+  }
 }

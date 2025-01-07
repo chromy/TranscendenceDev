@@ -1,0 +1,67 @@
+# Also is used by libcxxabi
+config("libcxx_config") {
+  include_dirs = [ "include" ]
+  defines = [ "LIBCXX_BUILDING_LIBCXXABI" ]
+}
+
+# Also is used by libcxxabi
+config("libcxx_internal_config") {
+  include_dirs = [ "src" ]
+  defines = [ "_LIBCPP_BUILDING_LIBRARY" ]
+}
+
+source_set("libcxx") {
+  public_configs = [
+    ":libcxx_config",
+    "//src/support/libcxx:libcxx_config",
+  ]
+  configs += [ ":libcxx_internal_config" ]
+  sources = [
+    "src/algorithm.cpp",
+    "src/any.cpp",
+    "src/atomic.cpp",
+    "src/barrier.cpp",
+    "src/bind.cpp",
+    "src/charconv.cpp",
+    "src/chrono.cpp",
+    "src/condition_variable.cpp",
+    "src/condition_variable_destructor.cpp",
+    "src/exception.cpp",
+    "src/format.cpp",
+    "src/functional.cpp",
+    "src/future.cpp",
+    "src/hash.cpp",
+    "src/ios.cpp",
+    "src/ios.instantiations.cpp",
+    "src/iostream.cpp",
+    "src/legacy_pointer_safety.cpp",
+    "src/locale.cpp",
+    "src/memory.cpp",
+    "src/mutex.cpp",
+    "src/mutex_destructor.cpp",
+    "src/new.cpp",
+    "src/optional.cpp",
+    "src/random.cpp",
+    "src/random_shuffle.cpp",
+    "src/regex.cpp",
+    "src/ryu/d2fixed.cpp",
+    "src/ryu/d2s.cpp",
+    "src/ryu/f2s.cpp",
+    "src/shared_mutex.cpp",
+    "src/stdexcept.cpp",
+    "src/string.cpp",
+    "src/strstream.cpp",
+    "src/system_error.cpp",
+    "src/thread.cpp",
+    "src/typeinfo.cpp",
+    "src/utility.cpp",
+    "src/valarray.cpp",
+    "src/variant.cpp",
+    "src/vector.cpp",
+    "src/verbose_abort.cpp",
+  ]
+  deps = [
+    "//deps/libcxxabi",
+    "//src/support/libcxx",
+  ]
+}
