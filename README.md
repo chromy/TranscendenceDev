@@ -12,9 +12,9 @@ Transcendence is a x86 Windows app using DirectX (fairly directly,
 Transcendence makes minimal use of the GPU) built with MSVC.
 
 The initial goal is to:
-- Create a clang build of Transcendence
-- Maintain cross compilation builds from {Linux/x86_64, Mac/arm64, Mac/x86_64} to Windows/x86
-- Upstream changes to the official repo where possible.
+- [x] Create a clang build of Transcendence
+- [ ] Maintain cross compilation builds from {Linux/x86_64, Mac/arm64, Mac/x86_64} to Windows/x86
+- [ ] Upstream changes to the official repo where possible.
 
 The idea is that making it possible to build Transcendence on other popular OSs (Linux, Mac) using a familiar toolchain on those platforms (clang):
 - Widens the pool of potential contributors to Transcendence
