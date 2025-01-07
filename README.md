@@ -53,7 +53,7 @@ git clone https://github.com/chromy/TranscendenceDev.git
 cd TranscendenceDev
 ```
 
-The `master` branch tracks [kronosaur/TranscendenceDev/master] the `clang`
+The `master` branch tracks [kronosaur/TranscendenceDev/master](https://github.com/kronosaur/TranscendenceDev/tree/master) the `clang`
 branch contains the clang build, CI, this README, etc.
 ```bash
 git checkout clang
@@ -80,7 +80,7 @@ the build.
 ./tools/gn gen --args='target_os="win" target_cpu="x86"' out/r
 ```
 
-`ninja` is similar to `make`.
+Now build everything using `ninja`. [ninja](https://ninja-build.org/) is similar to `make`.
 
 ```bash
 ./tools/ninja -C out/r
@@ -100,11 +100,9 @@ wine out/r/game/Transcendence.exe
 ## Contributing
 
 If you wish to contribute to the official Transcendence repository see [here](https://github.com/kronosaur/TranscendenceDev).
-If you wish to help with the `clang` build see [CONTRIBUTING.md].
+If you wish to help with the `clang` build see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 ## A brief history of attempted ports
 
 - https://github.com/GambitDash/Transport
-
-
