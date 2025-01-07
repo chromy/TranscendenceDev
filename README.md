@@ -20,6 +20,12 @@ The idea is that making it possible to build Transcendence on other popular OSs 
 - Widens the pool of potential contributors to Transcendence
 - Paves the way for native ports and similar projects
 
+## Demo
+[![Cross compiling demo](http://img.youtube.com/vi/NHef--LcI_k/0.jpg)](http://www.youtube.com/watch?v=NHef--LcI_k "Cross compiling Transcendence with clang on MacOS")
+
+[Video demo](https://youtu.be/NHef--LcI_k)
+
+
 ## Requirements
 
 Most dependencies will be downloaded for you by the `tools/fetch`
