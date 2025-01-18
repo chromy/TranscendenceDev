@@ -29,9 +29,28 @@ is_mac = current_os == "mac"
 is_win = current_os == "win"
 
 default_compiler_configs = [
-  "//gn/config:compiler_config",
-  "//gn/config:optimization_config",
+  "//gn/config:compiler",
+  "//gn/config:symbols",
 ]
+
+if (is_win) {
+  default_compiler_configs += [
+    "//gn/config:nostd",
+    "//gn/config:nostd++",
+  ]
+}
+
+if (is_mac) {
+  default_compiler_configs += [
+    "//gn/config:system_libc++",
+  ]
+}
+
+if (is_debug) {
+  default_compiler_configs += [ "//gn/config:debug" ]
+} else {
+  default_compiler_configs += [ "//gn/config:release" ]
+}
 
 default_executable_configs = default_compiler_configs + [
   "//gn/config:executable_config",

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+}!/usr/bin/env python3
 # Copyright (C) 2017 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -66,97 +66,63 @@ DEPS = [
     # GN. From https://chrome-infra-packages.appspot.com/dl/gn/gn/.
     # git_revision:0725d7827575b239594fbc8fd5192873a1d62f44 .
     Dependency(
-        'deps/gn/gn',
-        'https://storage.googleapis.com/perfetto/gn-mac-1968-0725d782',
-        '9ced623a664560bba38bbadb9b91158ca4186358c847e17ab7d982b351373c2e',
-        'darwin', 'x64'),
+        "deps/gn/gn",
+        "https://storage.googleapis.com/perfetto/gn-mac-1968-0725d782",
+        "9ced623a664560bba38bbadb9b91158ca4186358c847e17ab7d982b351373c2e",
+        "darwin", "x64"),
     Dependency(
-        'deps/gn/gn',
-        'https://storage.googleapis.com/perfetto/gn-mac-arm64-1968-0725d782',
-        'd22336b5210b4dad5e36e8c28ce81187f491822cf4d8fd0a257b30d6bee3fd3f',
-        'darwin', 'arm64'),
+        "deps/gn/gn",
+        "https://storage.googleapis.com/perfetto/gn-mac-arm64-1968-0725d782",
+        "d22336b5210b4dad5e36e8c28ce81187f491822cf4d8fd0a257b30d6bee3fd3f",
+        "darwin", "arm64"),
     Dependency(
-        'deps/gn/gn',
-        'https://storage.googleapis.com/perfetto/gn-linux64-1968-0725d782',
-        'f706aaa0676e3e22f5fc9ca482295d7caee8535d1869f99efa2358177b64f5cd',
-        'linux', 'x64'),
+        "deps/gn/gn",
+        "https://storage.googleapis.com/perfetto/gn-linux64-1968-0725d782",
+        "f706aaa0676e3e22f5fc9ca482295d7caee8535d1869f99efa2358177b64f5cd",
+        "linux", "x64"),
     Dependency(
-        'deps/gn/gn',
-        'https://storage.googleapis.com/perfetto/gn-linux-arm64-1968-0725d782',
-        'c2a372cd4f911028d8bc351fbf24835c9b1194fcc92beadf6c5a2b3addae973c',
-        'linux', 'arm64'),
+        "deps/gn/gn",
+        "https://storage.googleapis.com/perfetto/gn-linux-arm64-1968-0725d782",
+        "c2a372cd4f911028d8bc351fbf24835c9b1194fcc92beadf6c5a2b3addae973c",
+        "linux", "arm64"),
     Dependency(
-        'deps/gn/gn.exe',
-        'https://storage.googleapis.com/perfetto/gn-win-1968-0725d782',
-        '001f777f023c7a6959c778fb3a6b6cfc63f6baef953410ecdeaec350fb12285b',
-        'windows', 'x64'),
-
-    # clang-format
-    # From
-    # https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/mac/clang-format.arm64.sha1
-    Dependency(
-        'deps/clang-format/clang-format',
-        'https://storage.googleapis.com/chromium-clang-format/5553d7a3d912b7d49381ad68c9a56740601a57a0',
-        'e077990b2ea6807f6abc71b4cf1e487719d7e40574baddd2b51187fdcc8db803',
-        'darwin', 'arm64'),
-    # From
-    # https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/mac/clang-format.x64.sha1
-    Dependency(
-        'deps/clang-format/clang-format',
-        'https://storage.googleapis.com/chromium-clang-format/87d69aeff220c916b85b5d6d162fa5668aa9d64f',
-        '71179a8788a009cfd589636d50f0eb9f95f58b0cfda4351430bed7c0a48c080b',
-        'darwin', 'x64'),
-    # From https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/linux64/clang-format.sha1
-    Dependency(
-        'deps/clang-format/clang-format',
-        'https://storage.googleapis.com/chromium-clang-format/1facab3101fc6da6b9467543f27f0622b966bc19',
-        '5e459118d8ac825452e9e1f2717e4de5a36399dc6cc6aec7ec483ad27a0c927e',
-        'linux', 'x64'),
-    # From https://chromium.googlesource.com/chromium/src/buildtools/+/refs/heads/master/win/clang-format.exe.sha1
-    Dependency(
-        'deps/clang-format/clang-format.exe',
-        'https://storage.googleapis.com/chromium-clang-format/2e569921b9884daf157021d6ae9e21991cd6cf81',
-        '2227376ada89ea832995b832222b722a27c4d5d8d59e9c4d7842877f99a1e30d',
-        'windows', 'x64'),
-
-    # Keep the SHA1 in sync with |clang_format_rev| in chromium //buildtools/DEPS.
-    Dependency(
-        'deps/clang_format/script',
-        'https://chromium.googlesource.com/external/github.com/llvm/llvm-project/clang/tools/clang-format.git',
-        'f97059df7f8b205064625cdb5f97b56668a125ef', 'all', 'all'),
+        "deps/gn/gn.exe",
+        "https://storage.googleapis.com/perfetto/gn-win-1968-0725d782",
+        "001f777f023c7a6959c778fb3a6b6cfc63f6baef953410ecdeaec350fb12285b",
+        "windows", "x64"),
 
     # Ninja
     Dependency(
-        'deps/ninja/ninja',
-        'https://storage.googleapis.com/perfetto/ninja-mac-x64_and_arm64-182',
-        '36e8b7aaa06911e1334feb664dd731a1cd69a15eb916a231a3d10ff65fca2c73',
-        'darwin', 'all'),
+        "deps/ninja/ninja",
+        "https://storage.googleapis.com/perfetto/ninja-mac-x64_and_arm64-182",
+        "36e8b7aaa06911e1334feb664dd731a1cd69a15eb916a231a3d10ff65fca2c73",
+        "darwin", "all"),
     Dependency(
-        'deps/ninja/ninja',
-        'https://storage.googleapis.com/perfetto/ninja-linux64-182',
-        '54ac6a01362190aaabf4cf276f9c8982cdf11b225438940fdde3339be0f2ecdc',
-        'linux', 'x64'),
+        "deps/ninja/ninja",
+        "https://storage.googleapis.com/perfetto/ninja-linux64-182",
+        "54ac6a01362190aaabf4cf276f9c8982cdf11b225438940fdde3339be0f2ecdc",
+        "linux", "x64"),
     Dependency(
-        'deps/ninja/ninja.exe',
-        'https://storage.googleapis.com/perfetto/ninja-win-182',
-        '09ced0fcd1a4dec7d1b798a2cf9ce5d20e5d2fbc2337343827f192ce47d0f491',
-        'windows', 'x64'),
+        "deps/ninja/ninja.exe",
+        "https://storage.googleapis.com/perfetto/ninja-win-182",
+        "09ced0fcd1a4dec7d1b798a2cf9ce5d20e5d2fbc2337343827f192ce47d0f491",
+        "windows", "x64"),
     Dependency(
-        'deps/ninja/ninja',
-        'https://storage.googleapis.com/perfetto/ninja-linux-arm64-1111',
-        '05031a734ec4310a51b2cfe9f0096b26fce25ab4ff19e5b51abe6371de066cc5',
-        'linux', 'arm64'),
+        "deps/ninja/ninja",
+        "https://storage.googleapis.com/perfetto/ninja-linux-arm64-1111",
+        "05031a734ec4310a51b2cfe9f0096b26fce25ab4ff19e5b51abe6371de066cc5",
+        "linux", "arm64"),
 
     # Clang
     Dependency(
         "deps/clang.tgz",
-        "https://commondatastorage.googleapis.com/chromium-browser-clang/Mac_arm64/clang-llvmorg-19-init-7229-g315c88c5-1.tgz",
-        "20b7b0f83c59f82c43d217131a636864308f382e79b5a8a94f984c558a1db55e",
+        "https://commondatastorage.googleapis.com/chromium-browser-clang/Mac_arm64/clang-llvmorg-20-init-9764-gb81d8e90-72.tar.xz",
+        "f37a4a2f92b62d566c2c2d6070dd94c3e3251e10a5371b957d30f843d0bcbfa1",
         "darwin", "arm64"),
     Dependency(
         "deps/clang.tgz",
-        "https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/clang-llvmorg-19-init-7229-g315c88c5-1.tgz",
-        "de999de22c2a90ace9f16c8202fea7d5b57b6f039bd34691960f6edd30a3d413",
+        "https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64/clang-llvmorg-20-init-9764-gb81d8e90-72.tar.xz",
+        "6e9cc109c18a62eac2489e23071f46912bb7bb31560c60647e30e7dd0a92eb7c",
         "linux", "x64"),
 
     # llvm
@@ -183,19 +149,37 @@ DEPS = [
         "577525d2ff6a135d4ae882c8c9f6f38c67b1d3d9fad8c8b41d7e55199741326a",
         "linux", "x64"),
 
-    # macOS, 
+    # macOS
     Dependency(
-        "deps/MacOSX.tgz",
+        "deps/MacOS.tgz",
         "https://github.com/alexey-lysiuk/macos-sdk/releases/download/14.5/MacOSX14.5.tar.xz",
         "f6acc6209db9d56b67fcaf91ec1defe48722e9eb13dc21fb91cfeceb1489e57e",
         "all", "all"),
 
-
     # Googletest
     Dependency(
-        'deps/googletest',
-        'https://android.googlesource.com/platform/external/googletest.git',
-        '609281088cfefc76f9d0ce82e1ff6c30cc3591e5', 'all', 'all'),
+        "deps/googletest",
+        "https://android.googlesource.com/platform/external/googletest.git",
+        "609281088cfefc76f9d0ce82e1ff6c30cc3591e5", "all", "all"),
+
+    # libc++, libc++abi and libunwind for Linux where we need to rebuild the C++
+    # lib from sources. Keep the SHA1s in sync with Chrome's src/buildtools/DEPS.
+    Dependency(
+        "deps/libc++",
+        "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxx.git",
+        "74dd760826063f15ce4d373b31bc34d1c65e41c2", "all", "all"),
+    Dependency(
+        "deps/libc++abi",
+        "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxxabi.git",
+        "7681005c6233e8a21b97e24c1a3c5c6979927d5a", "all", "all"),
+    Dependency(
+        "deps/llvm-libc",
+        "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libc.git",
+        "cf32ae379c8968df8be7b8b9b1d69115402bccc4", "all", "all"),
+     Dependency(
+        "deps/libunwind",
+        "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libunwind.git",
+        "d1e95b102f113ded38974cf06a65fe0457b6004b", "all", "all"),
 ]
 
 ALL_DEPS = DEPS

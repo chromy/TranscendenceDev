@@ -1,6 +1,3 @@
-config("compiler") {
-}
-
 config("suppressions") {
   cflags = [
     # TODO(clang): Investigate and fix if possible:
@@ -33,10 +30,9 @@ config("suppressions") {
   ]
 }
 
-config("compiler_config") {
+config("compiler") {
   configs = [
     ":suppressions",
-    ":compiler",
     ":runtime_library",
   ]
   cflags = [
@@ -61,15 +57,41 @@ config("compiler_config") {
   cflags_objcc = [ "-std=c++20" ]
 }
 
-config("debug_config") {
+
+config("symbols") {
   ldflags = [ "-g" ]
+  cflags = [ "-g" ]
+}
+
+config("debug") {
   cflags = [
-    "-g",
     "-O0",
   ]
 }
 
-config("release_config") {
+config("nostd") {
+  cflags = [
+    "-nostdlibinc",
+  ]
+  ldflags = [
+    "-nostdlib",
+  ]
+}
+
+config("nostd++") {
+  cflags = [
+    "-nostdinc++",
+  ]
+  ldflags = [
+    "-nostdlib++",
+  ]
+}
+
+config("system_libc++") {
+  cflags_cc = ["-stdlib=libc++"]
+}
+
+config("release") {
   defines = [ "NDEBUG" ]
   cflags = [ "-O3" ]
 }
@@ -80,17 +102,8 @@ config("executable_config") {
 
 config("runtime_library") {
   cflags = []
-  cflags_cc = [
-    "-nostdinc++",
-  ]
-  ldflags = [
-    "-nostdlib",
-    "-nostdlib++",
-  ]
-
-  if (is_mac) {
-
-  }
+  cflags_cc = []
+  ldflags = []
 
 
   if (is_win) {
@@ -138,17 +151,6 @@ config("runtime_library") {
     cflags_cc += [
     ]
 
-  }
-}
-
-# Default optimisation level. Exactly one of:
-# - debug_config
-# - release_config
-config("optimization_config") {
-  if (is_debug) {
-    configs = [ "//gn/config:debug_config" ]
-  } else {
-    configs = [ "//gn/config:release_config" ]
   }
 }
 

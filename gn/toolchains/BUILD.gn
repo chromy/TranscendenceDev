@@ -29,8 +29,8 @@ template("clang_toolchain") {
     rc = "llvm-windres"
   }
 
-  if (defined(invoker.sysroot_path)) {
-    sysroot_path = rebase_path(invoker.sysroot_path, root_build_dir)
+  if (defined(invoker.sysroot)) {
+    sysroot_path = rebase_path(invoker.sysroot, root_build_dir)
     sysroot_flag = "--sysroot $sysroot_path"
   } else {
     sysroot_flag = ""
@@ -116,20 +116,19 @@ template("clang_toolchain") {
   }
 }
 
+# Hosts
 if (host_os == "mac" && host_cpu == "arm64") {
   host_triple = "arm64-apple-darwin-macho"
+  host_sysroot = "//deps/MacOS"
 }
 if (host_os == "linux" && host_cpu == "x64") {
   host_triple = "x86_64-unknown-linux-gnu"
 }
+
+# Targets
 if (target_os == "mac" && target_cpu == "arm64") {
   target_triple = "arm64-apple-darwin-macho"
-}
-if (target_os == "linux" && target_cpu == "x64") {
-  target_triple = "x86_64-unknown-linux-gnu"
-}
-if (target_os == "linux" && target_cpu == "arm64") {
-  target_triple = "aarch64-unknown-linux-gnu"
+  target_sysroot = "//deps/MacOS"
 }
 if (target_os == "win" && target_cpu == "x64") {
   target_triple = "x86_64-pc-win32-msvc"
@@ -140,26 +139,27 @@ if (target_os == "win" && target_cpu == "x86") {
 if (target_os == "win" && target_cpu == "arm64") {
   target_triple = "aarch64-pc-win32-msvc"
 }
+# TODO: linux
 
 
 clang_toolchain("host") {
   os = host_os
   cpu = host_cpu
+  if (defined(host_sysroot)) {
+    sysroot = host_sysroot
+  }
   llvm_tools_root = rebase_path("//deps/llvm")
   clang_tools_root = rebase_path("//deps/clang/bin")
   clang_target_triple = host_triple
-  if (os == "mac") {
-    sysroot_path = "//deps/MacOSX"
-  }
 }
 
 clang_toolchain("target") {
   os = target_os
   cpu = target_cpu
+  if (defined(target_sysroot)) {
+    sysroot = target_sysroot
+  }
   llvm_tools_root = rebase_path("//deps/llvm")
   clang_tools_root = rebase_path("//deps/clang/bin")
   clang_target_triple = target_triple
-  if (os == "mac") {
-    sysroot_path = "//deps/MacOSX"
-  }
 }

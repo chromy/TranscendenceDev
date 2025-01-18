@@ -9,14 +9,18 @@
 #include <cstddef>
 #include <functional>
 
+#include "Config.h"
+
+#if ALCHEMY_BUILDFLAG(ALCHEMY_OS_WINDOWS)
+
 #ifndef _WINDOWS_
 
 //	Support Windows 7 and above
 
 #ifndef _WIN32_WINNT
-#define _WIN32_WINNT	0x0601 
+#define _WIN32_WINNT	0x0601
 #define WINVER			0x0601
-#endif						
+#endif
 
 #define NOMINMAX
 #include <Windows.h>
@@ -24,6 +28,13 @@
 #endif
 
 #include <mmsystem.h>
+
+#else // ALCHEMY_BUILDFLAG(ALCHEMY_OS_WINDOWS)
+
+#include "WindowsCompat.h"
+
+#endif // ALCHEMY_BUILDFLAG(ALCHEMY_OS_WINDOWS)
+
 
 //	For some reason, <kernelspecs.h> defines HIGH_LEVEL, which ends up 
 //	conflicting with a lot of other definitions.
@@ -133,8 +144,8 @@ inline int ClockDiff (int iValue, int iOrigin, int iDivisor)
 	else
 		return iDiff - iDivisor;
 	}
-inline BOOL IsShiftDown (void) { return (GetAsyncKeyState(VK_SHIFT) & 0x8000) ? TRUE : FALSE; }
-inline BOOL IsControlDown (void) { return (GetAsyncKeyState(VK_CONTROL) & 0x8000) ? TRUE : FALSE; }
+BOOL IsShiftDown (void);
+BOOL IsControlDown (void);
 inline int Sign (int iValue) { return (iValue == 0 ? 0 : (iValue > 0 ? 1 : -1)); }
 template <class VALUE> VALUE Clamp (VALUE x, VALUE a, VALUE b)
 	{
