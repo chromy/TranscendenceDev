@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        target_os: [win]
+        target_os: [win, mac]
         target_cpu: [x86]
     steps:
       - name: Checkout
